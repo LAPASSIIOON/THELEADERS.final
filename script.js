@@ -170,7 +170,8 @@ function initHeroFX() {
     }, { passive: true });
   }
 
-  initHeroGem();     // المجسّم ثلاثي الأبعاد (Three.js)
+  initHeroGem();     // المجسّم الرئيسي (Three.js)
+  initMiniGem();     // المجسّم المرافق الصغير
   initCursorRing();  // المؤشر الذهبي المخصّص
 }
 
@@ -253,6 +254,69 @@ function initHeroGem() {
     if (!reduced) {
       gem.rotation.y += 0.0016;            // دوران خمولي لطيف
       gem.position.y = Math.sin(t * 0.6) * 0.12; // طفو صعودًا وهبوطًا
+    }
+    renderer.render(scene, camera);
+  }
+  loop();
+}
+
+/* ============================================================
+   MINI GEM — المجسّم المرافق (أوكتاهيدرون ذهبي بجوار واتساب)
+   نفس فيزياء التتبّع المخمّد (lerp) — "ينظر" نحو المؤشر أينما ذهب
+   ============================================================ */
+function initMiniGem() {
+  var canvas = document.getElementById('miniGem');
+  if (!canvas || typeof THREE === 'undefined') return;
+  if (window.innerWidth <= 1024 || window.matchMedia('(hover: none)').matches) return;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true }); }
+  catch (e) { return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(110, 110, false);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 50);
+  camera.position.set(0, 0, 3.4);
+
+  var geo = new THREE.OctahedronGeometry(1.1, 0);
+  var mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({
+    color: 0xE8C468, specular: 0xFFF6D8, shininess: 100,
+    flatShading: true, emissive: 0x201603, emissiveIntensity: 0.55
+  }));
+  mesh.add(new THREE.LineSegments(
+    new THREE.WireframeGeometry(geo),
+    new THREE.LineBasicMaterial({ color: 0xC5A059, transparent: true, opacity: 0.4 })
+  ));
+  scene.add(mesh);
+  scene.add(new THREE.AmbientLight(0x223055, 1.0));
+  var key = new THREE.PointLight(0xFFE6A8, 1.4); key.position.set(2, 2, 3); scene.add(key);
+
+  // "ينظر" نحو المؤشر: زوايا هدف من موقع المؤشر نسبةً إلى موضع الكانفس الثابت
+  var tRX = 0, tRY = 0;
+  window.addEventListener('mousemove', function (e) {
+    var r = canvas.getBoundingClientRect();
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    tRY = Math.atan2(e.clientX - cx, 600) * 1.6;
+    tRX = Math.atan2(e.clientY - cy, 600) * 1.6;
+  }, { passive: true });
+
+  var running = true;
+  document.addEventListener('visibilitychange', function () {
+    running = !document.hidden; if (running) loop();
+  });
+
+  var t = 0;
+  function loop() {
+    if (!running) return;
+    requestAnimationFrame(loop);
+    t += 0.016;
+    mesh.rotation.x += (tRX - mesh.rotation.x) * 0.06; // نفس تخميد الرئيسي
+    mesh.rotation.y += (tRY - mesh.rotation.y) * 0.06;
+    if (!reduced) {
+      mesh.rotation.y += 0.002;
+      mesh.position.y = Math.sin(t * 0.8) * 0.1;
     }
     renderer.render(scene, camera);
   }
