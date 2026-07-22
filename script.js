@@ -1,80 +1,123 @@
-// ===== THE LEADERS. Main Script =====
+/* ============================================================
+   THE LEADERS — Main Script (V3 Luxury Motion System)
+   ------------------------------------------------------------
+   نظام الحركة المعتمد:
+   · المنحنى: cubic-bezier(0.16, 1, 0.3, 1) — "Luxe Ease"
+   · المدة القياسية: 0.6–0.8 ثانية
+   · كل الحركات تحترم prefers-reduced-motion
+   · تسريع عتادي: translateZ(0) + will-change على المتحرك فقط
+   ============================================================ */
 
 function initScript() {
   // ===== PRELOADER =====
   var preloader = document.getElementById('preloader');
   if (preloader) {
-    setTimeout(function() { preloader.classList.add('hidden'); }, 1200);
+    setTimeout(function () { preloader.classList.add('hidden'); }, 1200);
   }
 
-  // ===== NAVBAR SCROLL =====
+  // ===== NAVBAR SCROLL (الزجاج يزداد كثافة عند التمرير) =====
   var navbar = document.getElementById('navbar');
   if (navbar) {
-    window.addEventListener('scroll', function() {
-      if (window.scrollY > 80) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 80) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    }, { passive: true });
   }
 
   // ===== HAMBURGER =====
   var hamburger = document.getElementById('hamburger');
   var navLinks = document.getElementById('navLinks');
   if (hamburger && navLinks) {
-    hamburger.addEventListener('click', function() {
+    hamburger.addEventListener('click', function () {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('active');
     });
-    navLinks.querySelectorAll('a').forEach(function(link) {
-      link.addEventListener('click', function() {
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
         hamburger.classList.remove('active');
         navLinks.classList.remove('active');
       });
     });
   }
 
-  // ===== SCROLL REVEAL =====
+  // ===== SCROLL REVEAL (كشف ناعم 0.8s بمنحنى Luxe) =====
   var revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
   if (revealEls.length && 'IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) entry.target.classList.add('active');
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(function(el) { observer.observe(el); });
+    revealEls.forEach(function (el) { observer.observe(el); });
   }
 
-  // ===== 3D TILT ON SERVICE CARDS =====
-  document.querySelectorAll('.service-card').forEach(function(card) {
-    card.addEventListener('mousemove', function(e) {
-      var rect = card.getBoundingClientRect();
-      var x = e.clientX - rect.left;
-      var y = e.clientY - rect.top;
-      var centerX = rect.width / 2;
-      var centerY = rect.height / 2;
-      var rotateX = (y - centerY) / 20;
-      var rotateY = (centerX - x) / 20;
-      card.style.transform = 'translateY(-8px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+  // ===== 3D TILT + إضاءة محيطية تتبع المؤشر =====
+  // ميلان مخفَّف بمعامل استيفاء (lerp) عبر rAF لنعومة 60fps،
+  // ويُفعَّل فقط على أجهزة المؤشر الدقيق (لا يعمل على اللمس).
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var reducedTilt = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (finePointer && !reducedTilt) {
+    document.querySelectorAll('.service-card, .trainer-card, .accreditation-card').forEach(function (card) {
+      var targetRX = 0, targetRY = 0, curRX = 0, curRY = 0, hovering = false, raf = null;
+
+      function tick() {
+        // استيفاء خطي بمعامل 0.12 = تباطؤ حريري بلا اهتزاز
+        curRX += (targetRX - curRX) * 0.12;
+        curRY += (targetRY - curRY) * 0.12;
+        card.style.transform =
+          'perspective(1000px) translateY(' + (hovering ? -10 : 0) + 'px) translateZ(0)' +
+          ' rotateX(' + curRX.toFixed(2) + 'deg) rotateY(' + curRY.toFixed(2) + 'deg)';
+        if (hovering || Math.abs(curRX) > 0.05 || Math.abs(curRY) > 0.05) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          card.style.transform = ''; raf = null;
+        }
+      }
+
+      card.addEventListener('mouseenter', function () {
+        hovering = true;
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = e.clientX - r.left, y = e.clientY - r.top;
+        // زوايا مقيدة ±5° = عمق راقٍ بلا مبالغة
+        targetRX = ((y - r.height / 2) / (r.height / 2)) * -5;
+        targetRY = ((x - r.width / 2) / (r.width / 2)) * 5;
+        // إحداثيات الإضاءة المحيطية (radial-gradient في CSS)
+        card.style.setProperty('--mx', (x / r.width * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (y / r.height * 100).toFixed(1) + '%');
+      });
+      card.addEventListener('mouseleave', function () {
+        hovering = false; targetRX = 0; targetRY = 0;
+      });
     });
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = '';
-    });
-  });
+  }
 }
 
-// ===== HERO FX: جسيمات ذهبية + بارالاكس (تحترم تقليل الحركة) =====
+/* ============================================================
+   HERO FX — جسيمات ذهبية + بارالاكس + أضواء محيطية
+   ============================================================ */
 function initHeroFX() {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ===== أضواء محيطية ضبابية (عمق فراغي عبر كل الصفحات) =====
+  if (!reduced && !document.querySelector('.ambient-orb')) {
+    ['o1', 'o2', 'o3'].forEach(function (cls) {
+      var orb = document.createElement('div');
+      orb.className = 'ambient-orb ' + cls;
+      orb.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(orb);
+    });
+  }
+
+  // ===== جسيمات ذهبية تتصاعد بهدوء (canvas خفيف) =====
   var canvas = document.getElementById('heroParticles');
   if (canvas && !reduced) {
     var ctx = canvas.getContext('2d');
     var hero = canvas.parentElement;
     var particles = [];
-    var COUNT = window.innerWidth < 768 ? 25 : 55;
+    var COUNT = window.innerWidth < 768 ? 22 : 50;
     function resize() { canvas.width = hero.offsetWidth; canvas.height = hero.offsetHeight; }
     resize();
     window.addEventListener('resize', resize);
@@ -83,9 +126,9 @@ function initHeroFX() {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         r: Math.random() * 2 + 0.6,
-        s: Math.random() * 0.35 + 0.1,
-        o: Math.random() * 0.5 + 0.15,
-        drift: (Math.random() - 0.5) * 0.15
+        s: Math.random() * 0.3 + 0.08,
+        o: Math.random() * 0.45 + 0.12,
+        drift: (Math.random() - 0.5) * 0.12
       });
     }
     (function draw() {
@@ -102,14 +145,16 @@ function initHeroFX() {
       requestAnimationFrame(draw);
     })();
   }
-  // بارالاكس خفيف على الوترمارك والأيقونة ثلاثية الأبعاد
+
+  // ===== بارالاكس هادئ على وترمارك الشعار (إزاحة فقط، بلا دوران) =====
   var wm = document.querySelector('.hero-watermark');
   if (wm && !reduced) {
-    window.addEventListener('scroll', function() {
-      wm.style.transform = 'translateY(' + (window.scrollY * 0.18) + 'px) rotate(' + (window.scrollY * 0.01) + 'deg)';
+    window.addEventListener('scroll', function () {
+      wm.style.transform = 'translateZ(0) translateY(' + (window.scrollY * 0.16) + 'px)';
     }, { passive: true });
   }
 }
+
 if (document.readyState !== 'loading') { initHeroFX(); }
 document.addEventListener('DOMContentLoaded', initHeroFX);
 
