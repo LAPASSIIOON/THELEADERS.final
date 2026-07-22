@@ -465,25 +465,12 @@ h1, h2, h3, h4, h5 {
   pointer-events: none;
 }
 .hero .container { position: relative; z-index: 2; }
-.hero-3d-icon {
-  position: absolute; top: 14%; left: 6%;
-  width: 150px; opacity: 0.9; z-index: 1;
-  pointer-events: none;
-  perspective: 900px;
-  animation: floatSlow 9s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px rgba(232,196,104,0.35));
-}
-.hero-3d-icon img {
-  width: 100%;
-}
-@keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
 .hero-watermark {
   position: absolute; bottom: -8%; left: -4%;
   width: 420px; opacity: 0.05; z-index: 0;
   pointer-events: none; will-change: transform;
 }
 @media (max-width: 1024px) {
-  .hero-3d-icon { width: 90px; top: 9%; left: 4%; opacity: 0.55; }
   .hero-watermark { width: 260px; }
 }
 
@@ -638,7 +625,7 @@ h1, h2, h3, h4, h5 {
 
 /* --- هيدر زجاجي داكن دائم (Glassmorphism) --- */
 .navbar {
-  background: rgba(20,30,54,0.55);
+  background: rgba(20,30,54,0.65);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(232,196,104,0.2);
   transition: background var(--dur-luxe) var(--ease-luxe), padding var(--dur-luxe) var(--ease-luxe), box-shadow var(--dur-luxe) var(--ease-luxe);
@@ -711,13 +698,6 @@ h1, h2, h3, h4, h5 {
   100% { transform: translate3d(-40px,50px,0) scale(0.95); }
 }
 main, .navbar, footer, section { position: relative; z-index: 1; }
-
-/* --- شعار الهيرو: توهج نبضي هادئ بدل الدوران --- */
-.hero-3d-icon img { animation: emblemGlow 6s ease-in-out infinite; }
-@keyframes emblemGlow {
-  0%,100% { filter: drop-shadow(0 0 12px rgba(232,196,104,0.25)); }
-  50%     { filter: drop-shadow(0 0 26px rgba(232,196,104,0.5)); }
-}
 
 /* --- تسريع عتادي للعناصر المتحركة باستمرار --- */
 .hero-watermark, .marquee-content, #heroParticles { transform: translateZ(0); }

@@ -6,7 +6,7 @@ function getNavbar(activePage) {
     { id: 'about', label: 'عن المعهد', href: 'about.html' },
     { id: 'courses', label: 'الدورات', href: 'courses.html' },
     { id: 'trainers', label: 'المدربون', href: 'trainers.html' },
-    { id: 'chairman', label: 'كلمة رئيس المجلس', href: 'chairman.html' },
+    { id: 'chairman', label: 'كلمة رئيس مجلس الإدارة', href: 'chairman.html' },
     { id: 'contact', label: 'تواصل معنا', href: 'contact.html' }
   ];
 
@@ -72,7 +72,7 @@ function getFooter() {
           <h4>المسارات التدريبية</h4>
           <ul>
             ${TRACKS.map(t => '<li><a href="course-detail.html?id=' + t.id + '">' + t.title + '</a></li>').join('')}
-            <li><a href="chairman.html">كلمة رئيس المجلس</a></li>
+            <li><a href="chairman.html">كلمة رئيس مجلس الإدارة</a></li>
           </ul>
         </div>
         <div class="footer-col">
