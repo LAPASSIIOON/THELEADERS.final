@@ -9,7 +9,8 @@ const SITE = {
   tagline: 'نصنع قادة... لا نُخرّج متدربين',
   domain: 'www.theleaders-kw.com',
   baseUrl: 'https://www.theleaders-kw.com', // عدّله مؤقتًا لرابط Vercel إن لزم قبل ربط الدومين
-  logo: 'logo.jpeg',
+  logo: 'logo-icon.png', // أيقونة AG شفافة للخلفيات الداكنة
+  logoFull: 'logo.jpeg',
   doctorImage: 'Dr_Haitham.jpg',
   bannerImage: 'banner.svg',
   accreditationImage: 'accreditation.png',

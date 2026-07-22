@@ -25,6 +25,10 @@ function getNavbar(activePage) {
     <div class="container">
       <a href="index.html" class="nav-logo">
         <img src="${SITE.logo}" alt="${SITE.nameEn}" />
+        <span class="nav-logo-text">
+          <span class="en">THE LEADERS</span>
+          <span class="ar">${SITE.nameAr}</span>
+        </span>
       </a>
       <ul class="nav-links" id="navLinks">
         ${linksHTML}
@@ -42,7 +46,13 @@ function getFooter() {
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="${SITE.logo}" alt="${SITE.nameAr}" />
+          <div class="footer-logo">
+            <img src="${SITE.logo}" alt="${SITE.nameAr}" />
+            <span class="nav-logo-text">
+              <span class="en">THE LEADERS</span>
+              <span class="ar">${SITE.nameAr}</span>
+            </span>
+          </div>
           <p>${SITE.nameAr} — ${SITE.tagline}</p>
           <div class="footer-accreditation">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
