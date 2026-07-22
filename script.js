@@ -108,9 +108,11 @@ function initHeroFX() {
   document.querySelectorAll('.marquee-content').forEach(function (mc) {
     var applySpeed = function () {
       var half = mc.scrollWidth / 2;
-      if (half > 0) mc.style.animationDuration = Math.max(45, Math.round(half / 24)) + 's';
+      // 20px/ثانية = زحف مريح للعين؛ المتغير يعمل حتى مع تفعيل "تقليل الحركة" في النظام
+      if (half > 0) mc.style.setProperty('--mdur', Math.max(60, Math.round(half / 20)) + 's');
     };
     applySpeed();
+    window.addEventListener('load', applySpeed);   // إعادة القياس بعد تحميل الخطوط
     window.addEventListener('resize', applySpeed);
   });
 
@@ -121,8 +123,8 @@ function initHeroFX() {
     var tx = 0, ty = 0, cx = 0, cy = 0, pRaf = null;
     function pTick() {
       // معامل 0.06 = قصور ذاتي سائل (تتبع متأخر حريري)
-      cx += (tx - cx) * 0.06;
-      cy += (ty - cy) * 0.06;
+      cx += (tx - cx) * 0.045;
+      cy += (ty - cy) * 0.045;
       heroEl.style.setProperty('--px', cx.toFixed(1) + 'px');
       heroEl.style.setProperty('--py', cy.toFixed(1) + 'px');
       if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) pRaf = requestAnimationFrame(pTick);
@@ -130,8 +132,8 @@ function initHeroFX() {
     }
     heroEl.addEventListener('mousemove', function (e) {
       var r = heroEl.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 46;   // مدى ±23px
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 34;   // مدى ±17px
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 28;   // مدى ±14px
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 20;   // مدى ±10px
       if (!pRaf) pRaf = requestAnimationFrame(pTick);
     });
     heroEl.addEventListener('mouseleave', function () {
