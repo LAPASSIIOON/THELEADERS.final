@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تفاصيل المسار | معهد القادة الدولية للتدريب الأهلي</title>
+  <meta name="description" content="تفاصيل المسار التدريبي في معهد القادة الدولية للتدريب الأهلي — الكويت." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="تفاصيل المسار | معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:locale" content="ar_KW" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+    const params = new URLSearchParams(window.location.search);
+    const trackId = params.get('id');
+    const track = TRACKS.find(function(t) { return t.id === trackId; });
+
+    if (!track) {
+      app.innerHTML = getNavbar('courses') + `
+        <section class="page-hero">
+          <div class="container">
+            <h1 class="page-hero-title">المسار غير موجود</h1>
+            <a href="courses.html" class="btn-primary" style="margin-top:2rem;display:inline-flex">العودة للمسارات</a>
+          </div>
+        </section>` + getFooter() + getWhatsAppButton();
+      initScript();
+      return;
+    }
+
+    document.title = 'مسار ' + track.title + ' | ' + SITE.nameAr;
+
+    // محاور الدورة — تُعرض فقط إن وُجدت بيانات معتمدة
+    const highlightsHTML = (track.highlights && track.highlights.length)
+      ? '<h3 style="margin:2rem 0 1rem;font-size:1.3rem;color:var(--navy)">محاور المسار</h3><ul style="padding-right:1.2rem;line-height:2">'
+        + track.highlights.map(function(h){ return '<li>' + h + '</li>'; }).join('') + '</ul>'
+      : '';
+
+    // أزرار التقويم — تُفعَّل تلقائيًا فقط عند إضافة تاريخ حقيقي (startDate بصيغة YYYYMMDDTHHMMSS)
+    const hasDate = !!(track.startDate && track.endDate);
+    const calendarButtonsHTML = hasDate ? `
+      <button class="btn-primary" onclick="openGoogleCalendar()">أضف إلى تقويم Google</button>
+      <button class="btn-secondary" style="color:var(--navy);border-color:var(--navy)" onclick="downloadICS()">أضف إلى التقويم (ملف ics)</button>
+    ` : `
+      <span style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(161,120,39,0.08);color:var(--gold);padding:0.9rem 1.5rem;border-radius:6px;font-size:0.9rem;font-weight:600">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        سيتفعّل زر الإضافة للتقويم فور إعلان المواعيد
+      </span>`;
+
+    const waRegister = 'https://wa.me/' + SITE.contact.whatsapp + '?text=' + encodeURIComponent('مرحبًا، أرغب بالتسجيل أو الاستفسار عن مسار ' + track.title + ' في معهد القادة.');
+
+    app.innerHTML = getNavbar('courses') + `
+      <section class="page-hero">
+        <div class="container">
+          <span class="section-tag">${track.category}</span>
+          <h1 class="page-hero-title">مسار ${track.title}</h1>
+          <div class="section-line" style="margin:1.5rem auto"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-text">
+              <h2>عن المسار</h2>
+              <p>${track.description}</p>
+              ${highlightsHTML}
+
+              <div style="display:flex;gap:1.5rem;margin-top:2rem;flex-wrap:wrap">
+                <div style="background:rgba(20,30,54,0.05);padding:1rem 1.5rem;border-radius:6px">
+                  <strong style="color:var(--navy)">الحالة:</strong> ${track.schedule}
+                </div>
+              </div>
+
+              <div style="margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+                ${calendarButtonsHTML}
+                <a href="${waRegister}" target="_blank" rel="noopener" class="btn-secondary" style="color:var(--navy);border-color:var(--navy)">
+                  استفسر / سجّل اهتمامك
+                </a>
+              </div>
+            </div>
+
+            <div class="about-image">
+              <div class="service-card" style="position:sticky;top:100px">
+                <div class="service-icon" style="width:80px;height:80px">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${track.icon}"/></svg>
+                </div>
+                <h3 style="margin-bottom:1.5rem">مسار ${track.title}</h3>
+                <div style="display:flex;flex-direction:column;gap:1rem">
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>${track.schedule}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:0.5rem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>${SITE.contact.address}</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:0.5rem">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="min-width:16px;margin-top:3px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span style="font-size:0.85rem">${SITE.accreditation.line}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    ` + getFooter() + getWhatsAppButton();
+
+    // ===== أدوات التقويم (تعمل فقط عند توفر startDate/endDate في بيانات المسار) =====
+    window.openGoogleCalendar = function() {
+      var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+        + '&text=' + encodeURIComponent(track.title + ' — ' + SITE.nameAr)
+        + '&details=' + encodeURIComponent(track.description)
+        + '&location=' + encodeURIComponent(SITE.contact.addressFull)
+        + '&dates=' + track.startDate + '/' + track.endDate;
+      window.open(url, '_blank');
+    };
+
+    window.downloadICS = function() {
+      var lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//' + SITE.nameEn + '//Course//AR',
+        'BEGIN:VEVENT',
+        'UID:' + track.id + '@' + SITE.domain,
+        'DTSTART:' + track.startDate,
+        'DTEND:' + track.endDate,
+        'SUMMARY:' + track.title + ' — ' + SITE.nameAr,
+        'DESCRIPTION:' + track.description.replace(/\n/g, '\\n'),
+        'LOCATION:' + SITE.contact.addressFull,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ];
+      var blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = track.id + '.ics';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    };
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عن المعهد | معهد القادة الدولية للتدريب الأهلي</title>
+  <meta name="description" content="رؤية ورسالة معهد القادة الدولية للتدريب الأهلي — معهد كويتي معتمد من الهيئة العامة للتعليم التطبيقي والتدريب وديوان الخدمة المدنية." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.theleaders-kw.com/about.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="عن المعهد | معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:description" content="نصنع قادة... لا نُخرّج متدربين — تعرّف على رؤيتنا ورسالتنا واعتمادنا الرسمي." />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:url" content="https://www.theleaders-kw.com/about.html" />
+  <meta property="og:locale" content="ar_KW" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+
+    const pillarsHTML = VISION_MISSION.pillars.map(function(p, i) {
+      const icons = [
+        'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+        'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z',
+        'M13 2L3 14h9l-1 8 10-12h-9l1-8z'
+      ];
+      return `
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${icons[i]}"/></svg>
+          </div>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+        </div>`;
+    }).join('');
+
+    app.innerHTML = getNavbar('about') + `
+
+      <!-- PAGE HERO -->
+      <section class="page-hero">
+        <div class="container">
+          <span class="section-tag">عن المعهد</span>
+          <h1 class="page-hero-title">${SITE.nameAr}</h1>
+          <div class="section-line" style="margin:1.5rem auto"></div>
+          <p class="section-desc">${SITE.tagline}</p>
+        </div>
+      </section>
+
+      <!-- VISION -->
+      <section class="section about">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-image reveal-right">
+              <img src="${SITE.doctorImage}" alt="الدكتور هيثم العون — رئيس مجلس الإدارة" class="about-image-main" />
+            </div>
+            <div class="about-text reveal-left">
+              <span class="section-tag">رؤيتنا</span>
+              <h2>الوجهة الأولى لصناعة <span class="gold">القادة الحقيقيين</span></h2>
+              <p>${VISION_MISSION.vision}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MISSION -->
+      <section class="section cta">
+        <div class="container">
+          <div class="reveal">
+            <span class="section-tag" style="color:var(--gold-light)">رسالتنا</span>
+            <h2 class="cta-title">القيادة قناعة <span class="gold">تُصنع من الداخل</span></h2>
+            <p class="cta-desc" style="max-width:750px;margin-left:auto;margin-right:auto">${VISION_MISSION.mission}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PILLARS -->
+      <section class="section" style="background:var(--off-white)">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-tag">ركائز رسالتنا</span>
+            <h2 class="section-title">نبني جيلًا <span class="gold">مختلفًا</span></h2>
+            <div class="section-line"></div>
+          </div>
+          <div class="services-grid" style="grid-template-columns:repeat(3,1fr)">
+            ${pillarsHTML}
+          </div>
+        </div>
+      </section>
+
+      <!-- ACCREDITATION -->
+      <section class="section accreditation-section">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-tag">الاعتماد الرسمي</span>
+            <h2 class="section-title">اعتماد رسمي... <span class="gold">وثقة مستحقة</span></h2>
+            <div class="section-line"></div>
+            <p class="section-desc">المصداقية المؤسسية ميزتنا الأساسية — لتكون شهادتك ذات قيمة حقيقية في مسيرتك الوظيفية.</p>
+          </div>
+          <div class="services-grid" style="grid-template-columns:repeat(2,1fr);max-width:800px;margin:0 auto">
+            <div class="accreditation-card reveal">
+              <div class="accreditation-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <h3>الهيئة العامة للتعليم التطبيقي والتدريب</h3>
+              <p>معهد معتمد رسميًا لدى الهيئة في دولة الكويت.</p>
+            </div>
+            <div class="accreditation-card reveal">
+              <div class="accreditation-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <h3>ديوان الخدمة المدنية</h3>
+              <p>برامج تدريبية معتمدة لدى ديوان الخدمة المدنية.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    ` + getFooter() + getWhatsAppButton();
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

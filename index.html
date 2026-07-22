@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>معهد القادة الدولية للتدريب الأهلي | THE LEADERS — الكويت</title>
+  <meta name="description" content="معهد القادة الدولية للتدريب الأهلي في الكويت — معهد معتمد من الهيئة العامة للتعليم التطبيقي والتدريب، وبرامج معتمدة لدى ديوان الخدمة المدنية. مسارات القيادة والتنمية البشرية والتحدث والإلقاء." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.theleaders-kw.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="THE LEADERS — معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:title" content="معهد القادة الدولية للتدريب الأهلي | THE LEADERS" />
+  <meta property="og:description" content="نصنع قادة... لا نُخرّج متدربين. معهد معتمد من الهيئة العامة للتعليم التطبيقي والتدريب وديوان الخدمة المدنية — الكويت." />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:url" content="https://www.theleaders-kw.com/" />
+  <meta property="og:locale" content="ar_KW" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "معهد القادة الدولية للتدريب الأهلي",
+    "alternateName": "THE LEADERS International Institute for Private Training",
+    "url": "https://www.theleaders-kw.com",
+    "logo": "https://www.theleaders-kw.com/logo.jpeg",
+    "slogan": "نصنع قادة... لا نُخرّج متدربين",
+    "description": "معهد تدريب أهلي في الكويت معتمد من الهيئة العامة للتعليم التطبيقي والتدريب، وبرامج معتمدة لدى ديوان الخدمة المدنية.",
+    "telephone": "+96599010470",
+    "email": "aloun.law@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "الكويت", "addressCountry": "KW", "streetAddress": "مجمع الأندلس" },
+    "hasMap": "https://www.google.com/maps/place/AlAndalus+Complex/data=!4m2!3m1!1s0x0:0x7cf8e849af919415"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+
+    // بطاقات المسارات الثلاثة
+    let tracksHTML = '';
+    TRACKS.forEach(function(t) {
+      tracksHTML += `
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${t.icon}"/></svg>
+          </div>
+          <h3>${t.title}</h3>
+          <p>${t.description}</p>
+          <div style="margin-bottom:1rem">
+            <span style="font-size:0.78rem;background:rgba(161,120,39,0.1);color:var(--gold);padding:0.3rem 0.9rem;border-radius:50px">${t.schedule}</span>
+          </div>
+          <a href="course-detail.html?id=${t.id}" class="service-link">
+            تفاصيل المسار
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </a>
+        </div>`;
+    });
+
+    app.innerHTML = getNavbar('home') + `
+
+      <!-- HERO -->
+      <section class="hero" id="home">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-gradient"></div>
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-text">
+              <div class="hero-badge">معهد معتمد رسميًا في دولة الكويت</div>
+              <h1 class="hero-title">
+                <span class="light">معهد القادة الدولية</span>
+                <span class="gold">للتدريب الأهلي</span>
+              </h1>
+              <p class="hero-tagline">${SITE.tagline}</p>
+              <p class="hero-description">
+                برامج تدريبية أصيلة الجذور، عالمية المعيار — في القيادة والتنمية البشرية والتحدث والإلقاء — لنبني جيلًا يقود بثقة، ويؤثر بصدق، وينمو بلا سقف.
+              </p>
+              <div class="hero-buttons">
+                <a href="courses.html" class="btn-primary">
+                  استعرض المسارات التدريبية
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+                <a href="https://wa.me/${SITE.contact.whatsapp}?text=${encodeURIComponent(SITE.contact.whatsappMessage)}" target="_blank" rel="noopener" class="btn-secondary">
+                  تواصل عبر واتساب
+                </a>
+              </div>
+            </div>
+            <div class="hero-image">
+              <div class="hero-image-wrapper">
+                <img src="${SITE.doctorImage}" alt="الدكتور هيثم العون — رئيس مجلس إدارة ${SITE.nameAr}" />
+              </div>
+              <div class="hero-image-frame"></div>
+              <div class="hero-image-frame-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACCREDITATION STRIP — الميزة التنافسية تتصدر -->
+      <section class="accreditation-strip" aria-label="الاعتماد الرسمي">
+        <div class="container">
+          <span class="accreditation-label">الاعتماد الرسمي</span>
+          <div class="accreditation-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>معهد معتمد من الهيئة العامة للتعليم التطبيقي والتدريب</span>
+          </div>
+          <div class="accreditation-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>برامج معتمدة لدى ديوان الخدمة المدنية</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MARQUEE — المسارات المعتمدة -->
+      <div class="marquee-banner" aria-hidden="true">
+        <div class="marquee-content">
+          <span>القيادة</span><span>التنمية البشرية</span><span>التحدث والإلقاء</span>
+          <span>القيادة</span><span>التنمية البشرية</span><span>التحدث والإلقاء</span>
+          <span>القيادة</span><span>التنمية البشرية</span><span>التحدث والإلقاء</span>
+          <span>القيادة</span><span>التنمية البشرية</span><span>التحدث والإلقاء</span>
+        </div>
+      </div>
+
+      <!-- ABOUT PREVIEW -->
+      <section class="section about" id="about">
+        <div class="container">
+          <div class="about-grid">
+            <div class="about-image reveal-right">
+              <img src="${SITE.doctorImage}" alt="الدكتور هيثم العون" class="about-image-main" />
+            </div>
+            <div class="about-text reveal-left">
+              <span class="section-tag">عن المعهد</span>
+              <h2>حيث تبدأ <span class="gold">القيادة</span></h2>
+              <p>
+                ${SITE.nameAr} — معهد كويتي معتمد رسميًا، يقدّم برامج تدريبية تنطلق من هوية الإنسان الخليجي وقيمه، وبمعايير عالمية.
+              </p>
+              <p>
+                نؤمن أن القيادة ليست منصبًا يُمنح، بل قناعة تُصنع من الداخل — ولذلك لا نُخرّج متدربين، بل نصنع قادة.
+              </p>
+              <div class="hero-buttons" style="margin-top:2rem">
+                <a href="about.html" class="btn-primary">
+                  اعرف المزيد
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRACKS -->
+      <section class="section services" id="services">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-tag">البرامج التدريبية</span>
+            <h2 class="section-title">مساراتنا <span class="gold">التدريبية</span></h2>
+            <div class="section-line"></div>
+            <p class="section-desc">ثلاثة مسارات متكاملة تُبنى عليها رحلتك — وتُعلن دورات كل مسار ومواعيدها قريبًا.</p>
+          </div>
+          <div class="services-grid">
+            ${tracksHTML}
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAIRMAN QUOTE -->
+      <section class="section chairman-quote-section">
+        <div class="container">
+          <div class="chairman-quote-grid reveal">
+            <div class="chairman-quote-image">
+              <img src="${CHAIRMAN_MESSAGE.image}" alt="${CHAIRMAN_MESSAGE.name} — ${CHAIRMAN_MESSAGE.role}" />
+            </div>
+            <div class="chairman-quote-text">
+              <span class="section-tag" style="color:var(--gold-light)">كلمة رئيس مجلس الإدارة</span>
+              <blockquote>${CHAIRMAN_MESSAGE.quote}</blockquote>
+              <div class="chairman-quote-name">${CHAIRMAN_MESSAGE.name}</div>
+              <div class="chairman-quote-role">${CHAIRMAN_MESSAGE.role}</div>
+              <div style="margin-top:1.8rem">
+                <a href="chairman.html" class="btn-secondary">اقرأ الكلمة كاملة</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARTNERS -->
+      <section class="section partners-section">
+        <div class="container">
+          <div class="section-header reveal">
+            <span class="section-tag">شركاؤنا</span>
+            <h2 class="section-title">شركاء <span class="gold">النجاح</span></h2>
+            <div class="section-line"></div>
+          </div>
+          <div class="partners-placeholder reveal">
+            <p>سيُعلن عن شركائنا قريبًا</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section cta" id="contact">
+        <div class="container">
+          <div class="reveal">
+            <span class="section-tag" style="color:var(--gold-light)">ابدأ رحلتك</span>
+            <h2 class="cta-title">خطوتك الأولى نحو القيادة <span class="gold">تبدأ من هنا</span></h2>
+            <p class="cta-desc">تواصل معنا اليوم عبر واتساب أو نموذج التواصل، وكن أول من يعرف عند إعلان الدورات.</p>
+            <div class="cta-buttons">
+              <a href="contact.html" class="btn-primary">تواصل معنا</a>
+              <a href="courses.html" class="btn-secondary">استعرض المسارات</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    ` + getFooter() + getWhatsAppButton();
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

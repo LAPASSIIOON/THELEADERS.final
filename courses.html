@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المسارات التدريبية | معهد القادة الدولية للتدريب الأهلي</title>
+  <meta name="description" content="مسارات معهد القادة الدولية للتدريب الأهلي: القيادة، التنمية البشرية، التحدث والإلقاء — برامج معتمدة في الكويت، وتُعلن المواعيد قريبًا." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.theleaders-kw.com/courses.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="المسارات التدريبية | معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:description" content="القيادة · التنمية البشرية · التحدث والإلقاء — برامج معتمدة في الكويت." />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:url" content="https://www.theleaders-kw.com/courses.html" />
+  <meta property="og:locale" content="ar_KW" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "المسارات التدريبية — معهد القادة الدولية للتدريب الأهلي",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "القيادة" },
+      { "@type": "ListItem", "position": 2, "name": "التنمية البشرية" },
+      { "@type": "ListItem", "position": 3, "name": "التحدث والإلقاء" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+
+    let tracksHTML = '';
+    TRACKS.forEach(function(t) {
+      tracksHTML += `
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="${t.icon}"/></svg>
+          </div>
+          <h3>${t.title}</h3>
+          <p>${t.description}</p>
+          <div style="margin-bottom:1rem">
+            <span style="font-size:0.78rem;background:rgba(161,120,39,0.1);color:var(--gold);padding:0.3rem 0.9rem;border-radius:50px">${t.schedule}</span>
+          </div>
+          <a href="course-detail.html?id=${t.id}" class="service-link">
+            تفاصيل المسار
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </a>
+        </div>`;
+    });
+
+    app.innerHTML = getNavbar('courses') + `
+      <section class="page-hero">
+        <div class="container">
+          <span class="section-tag">البرامج التدريبية</span>
+          <h1 class="page-hero-title">المسارات <span class="gold">التدريبية</span></h1>
+          <div class="section-line" style="margin:1.5rem auto"></div>
+          <p class="section-desc">ثلاثة مسارات معتمدة تُبنى عليها رحلتك التدريبية. تُعلن دورات كل مسار ومواعيدها ورسومها قريبًا — تابعنا أو تواصل عبر واتساب لتكون أول من يعرف.</p>
+        </div>
+      </section>
+
+      <section class="section services">
+        <div class="container">
+          <div class="services-grid">
+            ${tracksHTML}
+          </div>
+          <div style="text-align:center;margin-top:3.5rem" class="reveal">
+            <a href="https://wa.me/${SITE.contact.whatsapp}?text=${encodeURIComponent('مرحبًا، أرغب بمعرفة مواعيد الدورات القادمة في معهد القادة.')}" target="_blank" rel="noopener" class="btn-primary">أبلغوني عند إعلان الدورات</a>
+          </div>
+        </div>
+      </section>
+
+    ` + getFooter() + getWhatsAppButton();
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

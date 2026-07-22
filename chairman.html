@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>كلمة رئيس مجلس الإدارة | معهد القادة الدولية للتدريب الأهلي</title>
+  <meta name="description" content="كلمة الدكتور هيثم العون، رئيس مجلس إدارة معهد القادة الدولية للتدريب الأهلي." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.theleaders-kw.com/chairman.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="كلمة رئيس مجلس الإدارة | معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:description" content="كلمة الدكتور هيثم العون، رئيس مجلس الإدارة." />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:url" content="https://www.theleaders-kw.com/chairman.html" />
+  <meta property="og:locale" content="ar_KW" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+    const msg = CHAIRMAN_MESSAGE;
+
+    const messageParagraphs = msg.message.split('\n\n').map(function(p) {
+      return '<p>' + p.trim() + '</p>';
+    }).join('');
+
+    app.innerHTML = getNavbar('chairman') + `
+      <section class="page-hero">
+        <div class="container">
+          <span class="section-tag">${msg.title}</span>
+          <h1 class="page-hero-title">${msg.name}</h1>
+          <div class="section-line" style="margin:1.5rem auto"></div>
+          <p class="section-desc">${msg.role} — ${SITE.nameAr}</p>
+        </div>
+      </section>
+
+      <section class="section chairman-section">
+        <div class="container">
+          <div class="chairman-content reveal">
+            <div class="chairman-image">
+              <img src="${msg.image}" alt="${msg.name} — ${msg.role}" />
+            </div>
+            <div class="chairman-text">
+              ${messageParagraphs}
+              <div class="chairman-signature">
+                <div class="chairman-sign-line"></div>
+                <span>${msg.signature}</span>
+                <span class="chairman-sign-role">${msg.signatureRole}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    ` + getFooter() + getWhatsAppButton();
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
