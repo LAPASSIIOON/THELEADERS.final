@@ -65,7 +65,7 @@ function initScript() {
         curRX += (targetRX - curRX) * 0.12;
         curRY += (targetRY - curRY) * 0.12;
         card.style.transform =
-          'perspective(1000px) translateY(' + (hovering ? -10 : 0) + 'px) translateZ(0)' +
+          'perspective(1000px) translateY(' + (hovering ? -10 : 0) + 'px) scale(' + (hovering ? 1.02 : 1) + ') translateZ(0)' +
           ' rotateX(' + curRX.toFixed(2) + 'deg) rotateY(' + curRY.toFixed(2) + 'deg)';
         if (hovering || Math.abs(curRX) > 0.05 || Math.abs(curRY) > 0.05) {
           raf = requestAnimationFrame(tick);
@@ -100,6 +100,45 @@ function initScript() {
    ============================================================ */
 function initHeroFX() {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePtr = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // ===== الماركي السينمائي: سرعة قراءة ثابتة مهما كان عرض المحتوى =====
+  // المشكلة الجذرية: المدة الثابتة تجعل السرعة تتضاعف مع طول المحتوى.
+  // الحل: مدة = (نصف عرض المحتوى ÷ 24px/ثانية) — سرعة مريحة للعين دائمًا.
+  document.querySelectorAll('.marquee-content').forEach(function (mc) {
+    var applySpeed = function () {
+      var half = mc.scrollWidth / 2;
+      if (half > 0) mc.style.animationDuration = Math.max(45, Math.round(half / 24)) + 's';
+    };
+    applySpeed();
+    window.addEventListener('resize', applySpeed);
+  });
+
+  // ===== بارالاكس المؤشر بقصور ذاتي (الألواح الزجاجية في الهيرو) =====
+  // يكتب متغيري --px/--py على الهيرو فقط؛ CSS يوزعها على الألواح حسب --d.
+  var heroEl = document.querySelector('.hero');
+  if (heroEl && finePtr && !reduced && document.querySelector('.hero-slates')) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, pRaf = null;
+    function pTick() {
+      // معامل 0.06 = قصور ذاتي سائل (تتبع متأخر حريري)
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      heroEl.style.setProperty('--px', cx.toFixed(1) + 'px');
+      heroEl.style.setProperty('--py', cy.toFixed(1) + 'px');
+      if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) pRaf = requestAnimationFrame(pTick);
+      else pRaf = null;
+    }
+    heroEl.addEventListener('mousemove', function (e) {
+      var r = heroEl.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 46;   // مدى ±23px
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 34;   // مدى ±17px
+      if (!pRaf) pRaf = requestAnimationFrame(pTick);
+    });
+    heroEl.addEventListener('mouseleave', function () {
+      tx = 0; ty = 0;
+      if (!pRaf) pRaf = requestAnimationFrame(pTick);
+    });
+  }
 
   // ===== أضواء محيطية ضبابية (عمق فراغي عبر كل الصفحات) =====
   if (!reduced && !document.querySelector('.ambient-orb')) {

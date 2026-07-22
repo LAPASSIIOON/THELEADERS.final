@@ -73,9 +73,9 @@ h1, h2, h3, h4, h5 {
 }
 .navbar .container { display: flex; align-items: center; justify-content: space-between; }
 .nav-logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
-.nav-logo img { height: 46px; width: auto; transition: filter 0.7s cubic-bezier(0.16,1,0.3,1); }
+.nav-logo img { height: 46px; width: auto; filter: drop-shadow(0 0 9px rgba(232,196,104,0.3)); transition: filter var(--dur-luxe, 0.8s) cubic-bezier(0.16,1,0.3,1); }
 .navbar.scrolled .nav-logo img { height: 40px; }
-.nav-logo:hover img { filter: drop-shadow(0 0 14px rgba(232,196,104,0.55)); }
+.nav-logo:hover img { filter: drop-shadow(0 0 18px rgba(232,196,104,0.65)); }
 .nav-logo-text { display: flex; flex-direction: column; line-height: 1.3; }
 .nav-logo-text .en { font-family: var(--font-en); font-weight: 700; font-size: 1rem; letter-spacing: 2px; color: var(--white); }
 .nav-logo-text .ar { font-size: 0.6rem; color: var(--gold-light); font-weight: 500; }
@@ -124,7 +124,16 @@ h1, h2, h3, h4, h5 {
 /* ===== HERO ===== */
 .hero {
   position: relative; min-height: 100vh; display: flex;
-  align-items: center; background: var(--navy); overflow: hidden;
+  align-items: center; overflow: hidden;
+  background:
+    radial-gradient(1100px 640px at 72% 18%, #1c2b52 0%, var(--navy) 42%, var(--obsidian) 78%, var(--obsidian-deep) 100%);
+}
+/* إضاءة حجمية ذهبية خلف منطقة العنوان (Volumetric glow) */
+.hero::after {
+  content: ''; position: absolute; z-index: 1; pointer-events: none;
+  top: 18%; right: 4%; width: 640px; height: 640px;
+  background: radial-gradient(circle, rgba(232,196,104,0.09) 0%, transparent 62%);
+  filter: blur(8px);
 }
 .hero-bg-pattern {
   position: absolute; inset: 0; opacity: 0.03;
@@ -224,7 +233,7 @@ h1, h2, h3, h4, h5 {
 
 /* ===== MARQUEE — شريط فاخر داكن، بطيء، يتوقف عند التمرير، بتلاشٍ جانبي ===== */
 .marquee-banner {
-  background: linear-gradient(180deg, #1a2747 0%, var(--navy) 100%);
+  background: linear-gradient(180deg, var(--navy) 0%, var(--obsidian) 100%);
   border-top: 1px solid rgba(232,196,104,0.18);
   border-bottom: 1px solid rgba(232,196,104,0.18);
   padding: 1.05rem 0; overflow: hidden; white-space: nowrap;
@@ -414,7 +423,7 @@ h1, h2, h3, h4, h5 {
 .qr-code-container { text-align: center; }
 
 /* ===== FOOTER ===== */
-.footer { background: #0d1525; padding: 4rem 0 2rem; }
+.footer { background: linear-gradient(180deg, var(--obsidian) 0%, var(--obsidian-deep) 100%); padding: 4rem 0 2rem; }
 .footer-grid {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 3rem; padding-bottom: 3rem;
@@ -618,7 +627,9 @@ h1, h2, h3, h4, h5 {
    ============================================================ */
 :root {
   --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
-  --dur-luxe: 0.7s;
+  --dur-luxe: 0.8s;
+  --obsidian: #0b132b;       /* Deep Obsidian Navy */
+  --obsidian-deep: #060a12;  /* أعمق طبقة فراغية */
   --gold-grad: linear-gradient(135deg, #f3dda0 0%, #e8c468 45%, #c9a24a 100%);
   --shadow-deep: 0 20px 40px -15px rgba(0,0,0,0.6);
 }
@@ -672,19 +683,19 @@ h1, h2, h3, h4, h5 {
 }
 .service-card::after, .trainer-card::after, .accreditation-card::after {
   content: ''; position: absolute; inset: 0; border-radius: inherit;
-  background: radial-gradient(340px circle at var(--mx,50%) var(--my,50%), rgba(232,196,104,0.14), transparent 65%);
+  background: radial-gradient(340px circle at var(--mx,50%) var(--my,50%), rgba(232,196,104,0.18), transparent 65%);
   opacity: 0; transition: opacity var(--dur-luxe) var(--ease-luxe);
   pointer-events: none;
 }
 .service-card:hover::after, .trainer-card:hover::after, .accreditation-card:hover::after { opacity: 1; }
 .service-card:hover, .trainer-card:hover, .accreditation-card:hover {
-  box-shadow: var(--shadow-deep), 0 0 0 1px rgba(232,196,104,0.15);
+  box-shadow: 0 30px 60px -12px rgba(6,10,18,0.45), 0 0 0 1px rgba(232,196,104,0.15);
 }
 
 /* --- أضواء محيطية ضبابية بطيئة تمنح عمقًا فراغيًا (تُحقن من script.js) --- */
 .ambient-orb {
   position: fixed; border-radius: 50%;
-  filter: blur(90px); opacity: 0.16;
+  filter: blur(100px); opacity: 0.16;
   pointer-events: none; z-index: 0;
   will-change: transform;
   animation: orbDrift 38s var(--ease-luxe) infinite alternate;
@@ -701,3 +712,44 @@ main, .navbar, footer, section { position: relative; z-index: 1; }
 
 /* --- تسريع عتادي للعناصر المتحركة باستمرار --- */
 .hero-watermark, .marquee-content, #heroParticles { transform: translateZ(0); }
+
+
+/* ============================================================
+   V4 — ألواح زجاج ومعدن عائمة (بيئة هيرو ثلاثية الأبعاد)
+   البنية: <span class="slate" style="--d:عمق"><i></i></span>
+   الخارجي: بارالاكس المؤشر عبر --px/--py (تُكتب من script.js)
+   الداخلي <i>: الطفو البطيء المستقل — فصل كامل يمنع تعارض التحويلات
+   ============================================================ */
+.hero-slates { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 1200px; }
+.hero-slates .slate {
+  position: absolute; display: block;
+  transform: translate3d(calc(var(--px, 0px) * var(--d, 0.5)), calc(var(--py, 0px) * var(--d, 0.5)), 0);
+  will-change: transform;
+}
+.hero-slates .slate i {
+  display: block; width: 100%; height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(232,196,104,0.10) 0%, rgba(255,255,255,0.03) 55%, rgba(232,196,104,0.05) 100%);
+  border: 1px solid rgba(232,196,104,0.22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: 0 30px 60px -12px rgba(6,10,18,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: slateFloat 22s ease-in-out infinite;
+  will-change: transform;
+}
+.slate.s1 { width: 150px; height: 105px; top: 16%; left: 7%; }
+.slate.s2 { width: 90px;  height: 90px;  bottom: 20%; right: 5%; }
+.slate.s2 i { animation-duration: 26s; animation-delay: -8s; border-radius: 50%; }
+.slate.s3 { width: 64px;  height: 64px;  top: 13%; right: 20%; }
+.slate.s3 i { animation-duration: 18s; animation-delay: -13s; transform: rotate(14deg); }
+.slate.s4 { width: 115px; height: 78px;  bottom: 13%; left: 20%; }
+.slate.s4 i { animation-duration: 30s; animation-delay: -19s; }
+@keyframes slateFloat {
+  0%,100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+  33%     { transform: translateY(-16px) rotateX(3deg) rotateY(-4deg); }
+  66%     { transform: translateY(8px) rotateX(-2deg) rotateY(3deg); }
+}
+/* الأجهزة اللمسية والشاشات الصغيرة: إيقاف البيئة الثلاثية حفاظًا على 60fps */
+@media (max-width: 1024px), (hover: none) {
+  .hero-slates { display: none; }
+  .hero::after { width: 380px; height: 380px; }
+}
