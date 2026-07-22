@@ -203,21 +203,52 @@ function initHeroGem() {
   var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
   camera.position.set(0, 0, 5.2);
 
-  // الجوهرة: أوجه حادّة + معدن ذهبي لامع (Phong يعطي لمعانًا دون خرائط بيئة)
-  var geo = new THREE.IcosahedronGeometry(1.5, 0);
-  var mat = new THREE.MeshPhongMaterial({
-    color: 0xE8C468, specular: 0xFFF2CC, shininess: 90,
-    flatShading: true, emissive: 0x1a1204, emissiveIntensity: 0.6
-  });
-  var gem = new THREE.Mesh(geo, mat);
-  scene.add(gem);
+  // ===== منحوتة الشعار (Brand Emblem Sculpture) =====
+  // مستوحاة مباشرة من المونوغرام الدائري: قوس ذهبي سفلي + حلقة زجاج
+  // كحلية + ميدالية تحمل علامة AG الفعلية (نسيج من logo-icon.png)
+  var gem = new THREE.Group();
 
-  // شبكة سلكية ذهبية داكنة فوق الأوجه (تفصيل راقٍ)
-  var wire = new THREE.LineSegments(
-    new THREE.WireframeGeometry(geo),
-    new THREE.LineBasicMaterial({ color: 0xC5A059, transparent: true, opacity: 0.35 })
+  // 1) القوس الذهبي السفلي — توقيع الشعار (ذهب سائل بتدرج فاتح/غامق)
+  var arcGeo = new THREE.TorusGeometry(1.42, 0.17, 28, 72, Math.PI);
+  var goldMat = new THREE.MeshPhongMaterial({
+    color: 0xE8C468, specular: 0xFFF2CC, shininess: 100,
+    emissive: 0x2a1f08, emissiveIntensity: 0.5
+  });
+  var arc = new THREE.Mesh(arcGeo, goldMat);
+  arc.rotation.z = Math.PI; // الفتحة للأعلى كما في الشعار
+  gem.add(arc);
+
+  // 2) حلقة زجاج كحلية كاملة خلف القوس (عمق أوبسيديان شفاف)
+  var ringGeo = new THREE.TorusGeometry(1.42, 0.07, 20, 80);
+  var navyGlass = new THREE.MeshPhongMaterial({
+    color: 0x141E36, specular: 0x6C8CFF, shininess: 70,
+    transparent: true, opacity: 0.55
+  });
+  var ring = new THREE.Mesh(ringGeo, navyGlass);
+  ring.position.z = -0.12;
+  gem.add(ring);
+
+  // 3) الميدالية: علامة AG الحقيقية كنسيج على قرص عائم داخل الحلقة
+  var texLoader = new THREE.TextureLoader();
+  texLoader.load('logo-icon.png', function (tex) {
+    var plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.9, 1.74), // نسبة 180:165 الأصلية
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide })
+    );
+    plane.position.z = 0.05;
+    gem.add(plane);
+  });
+
+  // 4) لمسة معدنية: قوس ذهبي غامق رفيع داخلي (Gold Dark #A17827)
+  var innerArc = new THREE.Mesh(
+    new THREE.TorusGeometry(1.18, 0.045, 16, 60, Math.PI),
+    new THREE.MeshPhongMaterial({ color: 0xA17827, specular: 0xE8C468, shininess: 80 })
   );
-  gem.add(wire);
+  innerArc.rotation.z = Math.PI;
+  innerArc.position.z = -0.06;
+  gem.add(innerArc);
+
+  scene.add(gem);
 
   // إضاءة: محيط كحلي بارد + مفتاح ذهبي دافئ + حافة زرقاء
   scene.add(new THREE.AmbientLight(0x223055, 0.9));
