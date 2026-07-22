@@ -725,41 +725,57 @@ main, .navbar, footer, section { position: relative; z-index: 1; }
 .hero-watermark, .marquee-content, #heroParticles { transform: translateZ(0); }
 
 
+
+
 /* ============================================================
-   V4 — ألواح زجاج ومعدن عائمة (بيئة هيرو ثلاثية الأبعاد)
-   البنية: <span class="slate" style="--d:عمق"><i></i></span>
-   الخارجي: بارالاكس المؤشر عبر --px/--py (تُكتب من script.js)
-   الداخلي <i>: الطفو البطيء المستقل — فصل كامل يمنع تعارض التحويلات
+   V5 — مركز ثلاثي الأبعاد + عمق طباعي + مؤشر ذهبي (Awwwards layer)
    ============================================================ */
-.hero-slates { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 1200px; }
-.hero-slates .slate {
-  position: absolute; display: block;
-  transform: translate3d(calc(var(--px, 0px) * var(--d, 0.5)), calc(var(--py, 0px) * var(--d, 0.5)), 0);
-  will-change: transform;
+
+/* --- النص المائي العملاق خلف المجسّم (عمق فراغي) --- */
+.hero-word {
+  position: absolute; z-index: 0; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-en); font-weight: 800;
+  font-size: clamp(5rem, 18vw, 17rem); line-height: 1;
+  letter-spacing: 0.02em; white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(232,196,104,0.10);
+  background: linear-gradient(180deg, rgba(232,196,104,0.06), rgba(232,196,104,0.01));
+  -webkit-background-clip: text; background-clip: text;
+  pointer-events: none; user-select: none;
 }
-.hero-slates .slate i {
-  display: block; width: 100%; height: 100%;
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(232,196,104,0.16) 0%, rgba(255,255,255,0.04) 55%, rgba(232,196,104,0.08) 100%);
-  border: 1px solid rgba(232,196,104,0.32);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  box-shadow: 0 30px 60px -12px rgba(6,10,18,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
-  animation: slateFloat 48s ease-in-out infinite;
-  will-change: transform;
+
+/* --- كانفس المجسّم ثلاثي الأبعاد (جوهرة القيادة) --- */
+#heroGem {
+  position: absolute; z-index: 1; pointer-events: none;
+  top: 8%; left: 3%;
+  width: 380px; height: 420px;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.45));
 }
-.slate.s1 { width: 150px; height: 105px; top: 16%; left: 7%; }
-.slate.s2 { width: 90px;  height: 90px;  bottom: 20%; right: 5%; }
-.slate.s2 i { animation-duration: 56s; animation-delay: -14s; border-radius: 50%; }
-.slate.s3 { width: 64px;  height: 64px;  top: 13%; right: 20%; }
-.slate.s3 i { animation-duration: 44s; animation-delay: -22s; transform: rotate(14deg); }
-.slate.s4 { width: 115px; height: 78px;  bottom: 13%; left: 20%; }
-.slate.s4 i { animation-duration: 60s; animation-delay: -30s; }
-@keyframes slateFloat {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-10px); }
-}
-/* الأجهزة اللمسية والشاشات الصغيرة: إيقاف البيئة الثلاثية حفاظًا على 60fps */
 @media (max-width: 1024px), (hover: none) {
-  .hero-slates { display: none; }
+  #heroGem { display: none; }              /* بديل خفيف على الجوال/اللمس */
+  .hero-word { font-size: clamp(4rem, 26vw, 8rem); opacity: 0.7; }
   .hero::after { width: 380px; height: 380px; }
 }
+
+/* --- مؤشر ذهبي مخصّص (حلقة تتبع تكبر عند التفاعل) --- */
+.cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 9998;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid rgba(232,196,104,0.55);
+  background: radial-gradient(circle, rgba(232,196,104,0.10) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(1);
+  transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe),
+              background 0.4s var(--ease-luxe), border-color 0.4s var(--ease-luxe),
+              opacity 0.4s var(--ease-luxe);
+  pointer-events: none; opacity: 0; will-change: transform;
+  mix-blend-mode: screen;
+}
+.cursor-ring.visible { opacity: 1; }
+.cursor-ring.grow {
+  width: 60px; height: 60px;
+  background: radial-gradient(circle, rgba(232,196,104,0.20) 0%, transparent 70%);
+  border-color: rgba(232,196,104,0.8);
+}
+/* يُعطّل المؤشر المخصّص كليًا على اللمس */
+@media (hover: none), (pointer: coarse) { .cursor-ring { display: none; } }

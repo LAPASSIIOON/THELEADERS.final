@@ -116,31 +116,6 @@ function initHeroFX() {
     window.addEventListener('resize', applySpeed);
   });
 
-  // ===== بارالاكس المؤشر بقصور ذاتي (الألواح الزجاجية في الهيرو) =====
-  // يكتب متغيري --px/--py على الهيرو فقط؛ CSS يوزعها على الألواح حسب --d.
-  var heroEl = document.querySelector('.hero');
-  if (heroEl && finePtr && !reduced && document.querySelector('.hero-slates')) {
-    var tx = 0, ty = 0, cx = 0, cy = 0, pRaf = null;
-    function pTick() {
-      // معامل 0.06 = قصور ذاتي سائل (تتبع متأخر حريري)
-      cx += (tx - cx) * 0.045;
-      cy += (ty - cy) * 0.045;
-      heroEl.style.setProperty('--px', cx.toFixed(1) + 'px');
-      heroEl.style.setProperty('--py', cy.toFixed(1) + 'px');
-      if (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) pRaf = requestAnimationFrame(pTick);
-      else pRaf = null;
-    }
-    heroEl.addEventListener('mousemove', function (e) {
-      var r = heroEl.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 28;   // مدى ±14px
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 20;   // مدى ±10px
-      if (!pRaf) pRaf = requestAnimationFrame(pTick);
-    });
-    heroEl.addEventListener('mouseleave', function () {
-      tx = 0; ty = 0;
-      if (!pRaf) pRaf = requestAnimationFrame(pTick);
-    });
-  }
 
   // ===== أضواء محيطية ضبابية (عمق فراغي عبر كل الصفحات) =====
   if (!reduced && !document.querySelector('.ambient-orb')) {
@@ -194,6 +169,127 @@ function initHeroFX() {
       wm.style.transform = 'translateZ(0) translateY(' + (window.scrollY * 0.16) + 'px)';
     }, { passive: true });
   }
+
+  initHeroGem();     // المجسّم ثلاثي الأبعاد (Three.js)
+  initCursorRing();  // المؤشر الذهبي المخصّص
+}
+
+/* ============================================================
+   HERO GEM — جوهرة القيادة ثلاثية الأبعاد (Three.js r128)
+   ------------------------------------------------------------
+   · مجسّم إيكوساهيدرون ذهبي مُوجّه الأوجه (facets) + شبكة سلكية
+   · فيزياء تتبّع المؤشر بتخميد lerp ناعم (rotation.x / rotation.y)
+   · طفو خمولي بطيء على المحور Y (يُعطّل مع تقليل الحركة)
+   · ديسكتوب + WebGL فقط؛ يتجاوز نفسه بأمان على الجوال/اللمس
+   · سقف pixelRatio = 2، وإيقاف الحلقة عند إخفاء التبويب → 60fps
+   ============================================================ */
+function initHeroGem() {
+  var canvas = document.getElementById('heroGem');
+  if (!canvas || typeof THREE === 'undefined') return;
+  if (window.innerWidth <= 1024 || window.matchMedia('(hover: none)').matches) return;
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = canvas.clientWidth || 380, H = canvas.clientHeight || 420;
+
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  } catch (e) { return; } // بيئة بلا WebGL → تجاوز بأمان
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(W, H, false);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+  camera.position.set(0, 0, 5.2);
+
+  // الجوهرة: أوجه حادّة + معدن ذهبي لامع (Phong يعطي لمعانًا دون خرائط بيئة)
+  var geo = new THREE.IcosahedronGeometry(1.5, 0);
+  var mat = new THREE.MeshPhongMaterial({
+    color: 0xE8C468, specular: 0xFFF2CC, shininess: 90,
+    flatShading: true, emissive: 0x1a1204, emissiveIntensity: 0.6
+  });
+  var gem = new THREE.Mesh(geo, mat);
+  scene.add(gem);
+
+  // شبكة سلكية ذهبية داكنة فوق الأوجه (تفصيل راقٍ)
+  var wire = new THREE.LineSegments(
+    new THREE.WireframeGeometry(geo),
+    new THREE.LineBasicMaterial({ color: 0xC5A059, transparent: true, opacity: 0.35 })
+  );
+  gem.add(wire);
+
+  // إضاءة: محيط كحلي بارد + مفتاح ذهبي دافئ + حافة زرقاء
+  scene.add(new THREE.AmbientLight(0x223055, 0.9));
+  var key = new THREE.PointLight(0xFFE6A8, 1.5); key.position.set(3, 3, 4); scene.add(key);
+  var rim = new THREE.PointLight(0x6C8CFF, 0.5); rim.position.set(-4, -2, 2); scene.add(rim);
+
+  // تتبّع المؤشر → زوايا هدف مخمّدة
+  var targetRX = 0, targetRY = 0;
+  window.addEventListener('mousemove', function (e) {
+    targetRY = (e.clientX / window.innerWidth - 0.5) * 1.2;   // ±0.6 راديان
+    targetRX = (e.clientY / window.innerHeight - 0.5) * 1.2;
+  }, { passive: true });
+
+  function resize() {
+    W = canvas.clientWidth || 380; H = canvas.clientHeight || 420;
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  var running = true;
+  document.addEventListener('visibilitychange', function () {
+    running = !document.hidden; if (running) loop();
+  });
+
+  var t = 0;
+  function loop() {
+    if (!running) return;
+    requestAnimationFrame(loop);
+    t += 0.016;
+    // تخميد lerp نحو زاوية المؤشر (استجابة سائلة)
+    gem.rotation.x += (targetRX - gem.rotation.x) * 0.05;
+    gem.rotation.y += (targetRY - gem.rotation.y) * 0.05;
+    if (!reduced) {
+      gem.rotation.y += 0.0016;            // دوران خمولي لطيف
+      gem.position.y = Math.sin(t * 0.6) * 0.12; // طفو صعودًا وهبوطًا
+    }
+    renderer.render(scene, camera);
+  }
+  loop();
+}
+
+/* ============================================================
+   CUSTOM CURSOR — حلقة ذهبية تتبع المؤشر وتكبر عند التفاعل
+   · مؤشر النظام يبقى ظاهرًا (سلامة الاستخدام)؛ الحلقة تُضاف فوقه
+   · تتبّع بتخميد lerp، وتكبير عند المرور على العناصر التفاعلية
+   · مُعطّلة كليًا على اللمس (عبر CSS + حارس finePointer)
+   ============================================================ */
+function initCursorRing() {
+  var ring = document.querySelector('.cursor-ring');
+  if (!ring) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  var mx = window.innerWidth / 2, my = window.innerHeight / 2, rx = mx, ry = my, raf = null;
+  function tick() {
+    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18; // تتبّع متأخر حريري
+    ring.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) translate(-50%,-50%)';
+    if (Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1) raf = requestAnimationFrame(tick);
+    else raf = null;
+  }
+  window.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY;
+    ring.classList.add('visible');
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+  document.addEventListener('mouseleave', function () { ring.classList.remove('visible'); });
+
+  // تكبير الحلقة فوق كل عنصر تفاعلي
+  var sel = 'a, button, .btn-primary, .btn-secondary, .service-card, .trainer-card, .whatsapp-float, .hamburger';
+  document.querySelectorAll(sel).forEach(function (el) {
+    el.addEventListener('mouseenter', function () { ring.classList.add('grow'); });
+    el.addEventListener('mouseleave', function () { ring.classList.remove('grow'); });
+  });
 }
 
 if (document.readyState !== 'loading') { initHeroFX(); }
