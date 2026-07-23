@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>السيرة الذاتية | معهد القادة الدولية للتدريب الأهلي</title>
+  <meta name="description" content="السيرة الذاتية لأعضاء فريق معهد القادة الدولية للتدريب الأهلي — الكويت." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="السيرة الذاتية | معهد القادة الدولية للتدريب الأهلي" />
+  <meta property="og:image" content="https://www.theleaders-kw.com/logo.jpeg" />
+  <meta property="og:locale" content="ar_KW" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+</head>
+<body>
+  <div id="app"></div>
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = document.getElementById('app');
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const person = TRAINERS.find(function(t) { return t.id === id && t.cv; });
+
+    if (!person) {
+      app.innerHTML = getNavbar('trainers') + `
+        <section class="page-hero">
+          <div class="container">
+            <h1 class="page-hero-title">السيرة <span class="gold">غير متاحة</span></h1>
+            <div class="section-line" style="margin:1.5rem auto"></div>
+            <p class="section-desc">لم نعثر على السيرة المطلوبة.</p>
+            <a href="trainers.html" class="btn-primary" style="margin-top:2rem">العودة إلى المدربين</a>
+          </div>
+        </section>
+      ` + getFooter() + getWhatsAppButton();
+      return;
+    }
+
+    // تحديث عنوان الصفحة وبياناتها لمحركات البحث
+    document.title = person.cv.fullName + ' | ' + SITE.nameAr;
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', person.cv.fullName + ' — ' + person.title + ' في ' + SITE.nameAr + '. المؤهلات والخبرات والأبحاث.');
+
+    // أقسام السيرة
+    var sectionsHTML = person.cv.sections.map(function(s) {
+      var items = s.items.map(function(it, i) {
+        return '<li><span class="cv-num">' + (i + 1) + '</span><span>' + it + '</span></li>';
+      }).join('');
+      return `
+        <div class="cv-block reveal">
+          <h2 class="cv-block-title">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${s.icon}"/></svg>
+            ${s.title}
+          </h2>
+          <ol class="cv-list">${items}</ol>
+        </div>`;
+    }).join('');
+
+    app.innerHTML = getNavbar('trainers') + `
+      <section class="cv-hero">
+        <div class="container">
+          <a href="trainers.html" class="cv-back">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            العودة إلى المدربين
+          </a>
+          <div class="cv-hero-grid">
+            <div class="cv-hero-photo">
+              <img src="${person.image}" alt="${person.cv.fullName}" />
+            </div>
+            <div class="cv-hero-text">
+              <span class="section-tag">${person.title}</span>
+              <h1 class="cv-name">${person.cv.fullName}</h1>
+              <div class="cv-meta">
+                <span><strong>المسمى الوظيفي:</strong> ${person.cv.position}</span>
+                <span><strong>الجنسية:</strong> ${person.cv.nationality}</span>
+              </div>
+              <div class="cv-actions">
+                ${person.cvPdf ? '<a href="' + person.cvPdf + '" target="_blank" rel="noopener" class="btn-primary">تحميل السيرة الذاتية (PDF)<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>' : ''}
+                <a href="https://wa.me/${SITE.contact.whatsapp}" target="_blank" rel="noopener" class="btn-secondary">تواصل عبر واتساب</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cv-body">
+        <div class="container">
+          <div class="cv-layout">
+            <div class="cv-main">${sectionsHTML}</div>
+
+            <aside class="cv-side">
+              <!-- رمز QR: يُولَّد من رابط هذه الصفحة نفسها فيعمل على أي دومين -->
+              <div class="cv-qr-card">
+                <div class="qr-frame">
+                  <img id="cvQr" src="" alt="رمز QR للسيرة الذاتية" width="200" height="200" loading="lazy" />
+                </div>
+                <h3 class="qr-title">افتحها على جوالك</h3>
+                <p class="qr-note">امسح الرمز بكاميرا هاتفك لفتح السيرة الذاتية عليه مباشرة أو لمشاركتها.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    ` + getFooter() + getWhatsAppButton();
+
+    // توليد رمز QR من الرابط الحالي (يظل صحيحًا مهما تغيّر الدومين)
+    var qr = document.getElementById('cvQr');
+    if (qr) {
+      qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6&color=141E36&bgcolor=F8F6EF&data='
+             + encodeURIComponent(window.location.href);
+    }
+
+    initScript();
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

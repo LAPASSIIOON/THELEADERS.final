@@ -40,6 +40,7 @@
             <p class="trainer-title">${t.title}</p>
             <p class="trainer-bio">${t.bio}</p>
             ${t.specialties.length ? '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem">' + specialtiesHTML + '</div>' : ''}
+            ${t.cv ? '<a href="trainer-detail.html?id=' + t.id + '" class="btn-cv">انقر للاطلاع على السيرة الذاتية<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></a>' : ''}
           </div>
         </div>`;
     });
