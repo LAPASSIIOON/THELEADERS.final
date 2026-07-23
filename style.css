@@ -613,6 +613,9 @@ h1, h2, h3, h4, h5 {
   .nav-links {
     position: fixed; top: 0; left: -100%;
     width: 74%; height: 100vh;
+    height: 100dvh;                  /* ارتفاع دقيق على iOS Safari */
+    z-index: 1001;                   /* فوق باقي عناصر الهيدر */
+    overflow-y: auto;                /* تمرير آمن على الشاشات القصيرة */
     background: rgba(20,30,54,0.97); /* كحلي الهوية */
     -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
     box-shadow: 20px 0 60px rgba(0,0,0,0.5);
@@ -728,7 +731,9 @@ h1, h2, h3, h4, h5 {
   50%  { transform: translate3d(60px,-40px,0) scale(1.12); }
   100% { transform: translate3d(-40px,50px,0) scale(0.95); }
 }
-main, .navbar, footer, section { position: relative; z-index: 1; }
+main, footer, section { position: relative; z-index: 1; }
+/* الهيدر يجب أن يعلو الأقسام حتى تظهر قائمة الجوال فوق محتوى الصفحة */
+.navbar { position: relative; z-index: 1000; }
 
 /* --- تسريع عتادي للعناصر المتحركة باستمرار --- */
 .hero-watermark, .marquee-content, #heroParticles { transform: translateZ(0); }
