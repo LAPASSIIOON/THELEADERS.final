@@ -71,31 +71,31 @@ h1, h2, h3, h4, h5 {
 /* ===== NAVBAR ===== */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  padding: 1.2rem 0; transition: all 0.4s ease; background: transparent;
+  padding: 1rem 0; transition: all 0.4s ease;
 }
 .navbar.scrolled {
-  background: rgba(20,30,54,0.97); backdrop-filter: blur(20px);
+  background: #141E36; backdrop-filter: blur(20px);
   padding: 0.8rem 0; box-shadow: 0 4px 30px rgba(0,0,0,0.15);
 }
 .navbar .container { display: flex; align-items: center; justify-content: space-between; }
 .nav-logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
-.nav-logo img { height: 55px; width: auto; filter: drop-shadow(0 0 9px rgba(232,196,104,0.3)); transition: filter var(--dur-luxe, 0.8s) cubic-bezier(0.16,1,0.3,1); }
-.navbar.scrolled .nav-logo img { height: 48px; }
+.nav-logo img { height: 66px; width: auto; filter: drop-shadow(0 0 9px rgba(232,196,104,0.3)); transition: filter var(--dur-luxe, 0.8s) cubic-bezier(0.16,1,0.3,1); }
+.navbar.scrolled .nav-logo img { height: 58px; }
 .nav-logo:hover img { filter: drop-shadow(0 0 18px rgba(232,196,104,0.65)); }
 .nav-logo-text { display: flex; flex-direction: column; line-height: 1.3; }
-.nav-logo-text .en { font-family: var(--font-en); font-weight: 700; font-size: 1.2rem; letter-spacing: 2.4px; color: var(--white); }
-.nav-logo-text .ar { font-size: 0.72rem; color: var(--gold-light); font-weight: 500; }
+.nav-logo-text .en { font-family: var(--font-en); font-weight: 700; font-size: 1.42rem; letter-spacing: 2.6px; color: var(--white); }
+.nav-logo-text .ar { font-size: 0.84rem; color: var(--gold-light); font-weight: 500; }
 .footer-logo { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
 .footer-logo img { height: 50px; width: auto; }
 
 .nav-links {
-  display: flex; align-items: center; gap: 2rem;
+  display: flex; align-items: center; gap: 2.3rem;
   list-style: none;
 }
 .nav-links a {
   color: rgba(255,255,255,0.88); text-decoration: none;
-  font-family: var(--font-ar-head); /* Cairo 600 — خط القوائم الرسمي */
-  font-size: 1rem; font-weight: 600; position: relative;
+  font-family: var(--font-ar-head); /* Cairo — خط القوائم الرسمي */
+  font-size: 1.12rem; font-weight: 700; letter-spacing: 0.2px; position: relative;
   transition: color 0.4s var(--ease-luxe, ease), text-shadow 0.4s var(--ease-luxe, ease);
 }
 .nav-links a::after {
@@ -386,7 +386,7 @@ h1, h2, h3, h4, h5 {
 }
 .trainer-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
 .trainer-image { height: 280px; overflow: hidden; }
-.trainer-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.trainer-image img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.5s ease; }
 .trainer-card:hover .trainer-image img { transform: scale(1.05); }
 .trainer-placeholder {
   width: 100%; height: 100%; background: var(--navy);
@@ -614,7 +614,7 @@ h1, h2, h3, h4, h5 {
   .nav-links {
     position: fixed; top: 0; left: -100%;
     width: 74%; height: 100vh;
-    background: rgba(11,19,43,0.94);
+    background: rgba(20,30,54,0.97); /* كحلي الهوية */
     -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
     box-shadow: 20px 0 60px rgba(0,0,0,0.5);
     flex-direction: column; justify-content: center;
@@ -657,13 +657,13 @@ h1, h2, h3, h4, h5 {
 
 /* --- هيدر زجاجي داكن دائم (Glassmorphism) --- */
 .navbar {
-  background: rgba(20, 30, 54, 0.85); /* كحلي الهوية #141E36 بزجاج فاخر */
+  background: #141E36; /* كحلي الهوية الرسمي — معتم، لا يتأثر بما خلفه */
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(232,196,104,0.2);
   transition: background var(--dur-luxe) var(--ease-luxe), padding var(--dur-luxe) var(--ease-luxe), box-shadow var(--dur-luxe) var(--ease-luxe);
 }
 .navbar.scrolled {
-  background: rgba(20, 30, 54, 0.95);
+  background: #141E36;
   box-shadow: 0 12px 40px -12px rgba(0,0,0,0.55);
 }
 
@@ -792,14 +792,6 @@ main, .navbar, footer, section { position: relative; z-index: 1; }
 @media (hover: none), (pointer: coarse) { .cursor-ring { display: none; } }
 
 
-/* --- المجسّم المرافق: يمين الهيرو السفلي — الجهة المقابلة لواتساب --- */
-#miniGem {
-  position: absolute; right: 4%; bottom: 7%; z-index: 1;
-  width: 110px; height: 110px; pointer-events: none;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.5));
-  will-change: transform;
-}
-@media (max-width: 1024px), (hover: none) { #miniGem { display: none; } }
 
 /* --- شبكات الكروت: عمودان على التابلت (769–1024px) --- */
 @media (min-width: 769px) and (max-width: 1024px) {
