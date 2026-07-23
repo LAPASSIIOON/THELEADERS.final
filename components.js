@@ -113,3 +113,186 @@ function getWhatsAppButton() {
     </svg>
   </a>`;
 }
+
+/* ============================================================
+   1) اللقاءات والتغطيات الإعلامية — Media Coverage
+   ------------------------------------------------------------
+   لإضافة لقاء حقيقي: ضع عنصرًا في MEDIA_ITEMS بالشكل التالي
+   (يكفي معرّف فيديو يوتيوب — الصورة المصغّرة تُجلب تلقائيًا):
+
+   { badge: 'تلفزيون الكويت',
+     title: 'عنوان اللقاء',
+     desc:  'وصف مختصر للقاء أو التغطية.',
+     youtubeId: 'XXXXXXXXXXX' }
+
+   وإن كانت التغطية صحفية بلا فيديو، استخدم link بدل youtubeId:
+   { badge: 'تغطية صحفية', title: '...', desc: '...',
+     link: 'https://...', thumb: 'media/cover1.jpg' }
+
+   ما دامت المصفوفة فارغة تُعرض بطاقات "قريبًا" — بلا أي ادعاء غير موثّق.
+   ============================================================ */
+const MEDIA_ITEMS = [];
+
+function getMediaSection() {
+  var cards;
+
+  if (MEDIA_ITEMS.length) {
+    cards = MEDIA_ITEMS.map(function (m) {
+      var thumb = m.thumb || (m.youtubeId
+        ? 'https://img.youtube.com/vi/' + m.youtubeId + '/hqdefault.jpg'
+        : '');
+      var action = m.youtubeId
+        ? 'onclick="openMediaModal(\'' + m.youtubeId + '\')"'
+        : '';
+      var media = m.youtubeId
+        ? '<button class="media-play" type="button" ' + action + ' aria-label="تشغيل: ' + m.title + '">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M8 5v14l11-7z"/></svg>' +
+          '</button>'
+        : '<a class="media-play" href="' + (m.link || '#') + '" target="_blank" rel="noopener" aria-label="قراءة: ' + m.title + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+          '</a>';
+
+      return '' +
+      '<article class="media-card reveal">' +
+        '<div class="media-thumb"' + (thumb ? ' style="background-image:url(\'' + thumb + '\')"' : '') + '>' +
+          '<span class="media-badge">' + m.badge + '</span>' +
+          '<div class="media-overlay">' + media + '</div>' +
+        '</div>' +
+        '<div class="media-body">' +
+          '<h3 class="media-title">' + m.title + '</h3>' +
+          '<p class="media-desc">' + m.desc + '</p>' +
+          (m.youtubeId
+            ? '<button class="media-link" type="button" ' + action + '>مشاهدة اللقاء' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></button>'
+            : '<a class="media-link" href="' + (m.link || '#') + '" target="_blank" rel="noopener">فتح المصدر' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></a>') +
+        '</div>' +
+      '</article>';
+    }).join('');
+  } else {
+    // حالة "قريبًا" — ثلاث بطاقات هيكلية بنفس التصميم دون محتوى مُفترض
+    cards = [1, 2, 3].map(function () {
+      return '' +
+      '<article class="media-card media-card--empty reveal">' +
+        '<div class="media-thumb">' +
+          '<span class="media-badge">قريبًا</span>' +
+          '<div class="media-overlay">' +
+            '<span class="media-play media-play--idle" aria-hidden="true">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M8 5v14l11-7z"/></svg>' +
+            '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="media-body">' +
+          '<h3 class="media-title">يُضاف قريبًا</h3>' +
+          '<p class="media-desc">تُنشر هنا لقاءات المعهد وقياداته وتغطياته الإعلامية فور توفّرها.</p>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+  }
+
+  return `
+  <section class="section media-section" id="media">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">الإعلام</span>
+        <h2 class="section-title">اللقاءات والتغطيات <span class="gold">الإعلامية</span></h2>
+        <div class="section-line"></div>
+        <p class="section-desc">مقتطفات من ظهور المعهد وقياداته في الوسائل الإعلامية والتلفزيونية</p>
+      </div>
+      <div class="media-grid">${cards}</div>
+    </div>
+
+    <!-- نافذة تشغيل الفيديو -->
+    <div class="media-modal" id="mediaModal" role="dialog" aria-modal="true" aria-label="مشغّل الفيديو" onclick="if(event.target===this)closeMediaModal()">
+      <div class="media-modal-inner">
+        <button class="media-modal-close" type="button" onclick="closeMediaModal()" aria-label="إغلاق">&times;</button>
+        <div class="media-modal-frame">
+          <iframe id="mediaModalFrame" src="" title="فيديو" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+/* فتح/إغلاق نافذة الفيديو (youtube-nocookie لحماية الخصوصية) */
+function openMediaModal(videoId) {
+  var m = document.getElementById('mediaModal');
+  var f = document.getElementById('mediaModalFrame');
+  if (!m || !f) return;
+  f.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMediaModal() {
+  var m = document.getElementById('mediaModal');
+  var f = document.getElementById('mediaModalFrame');
+  if (!m) return;
+  m.classList.remove('open');
+  if (f) f.src = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeMediaModal();
+});
+
+/* ============================================================
+   2) الموقع والوصول — خريطة جوجل + رمز QR
+   الإحداثيات ومعرّف المكان مأخوذان من رابط الخريطة الرسمي للمعهد
+   ============================================================ */
+const LOCATION = {
+  lat: 29.3415005,
+  lng: 48.0259086,
+  shareUrl: 'https://maps.app.goo.gl/37E4Ru8BX2apz1dv7',
+  get embedUrl() {
+    return 'https://maps.google.com/maps?q=' + this.lat + ',' + this.lng +
+           '&z=17&hl=ar&output=embed';
+  },
+  get qrUrl() {
+    return 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6' +
+           '&color=141E36&bgcolor=F8F6EF&data=' + encodeURIComponent(this.shareUrl);
+  }
+};
+
+function getLocationSuite() {
+  return `
+  <section class="section location-section" id="location">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">الموقع</span>
+        <h2 class="section-title">مقر <span class="gold">المعهد</span></h2>
+        <div class="section-line"></div>
+        <p class="section-desc">${SITE.contact.addressFull}</p>
+      </div>
+
+      <div class="location-grid">
+        <!-- الخريطة -->
+        <div class="location-map reveal">
+          <div class="location-map-frame">
+            <iframe src="${LOCATION.embedUrl}" title="موقع معهد القادة الدولية على خرائط جوجل"
+                    loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen></iframe>
+          </div>
+          <a href="${LOCATION.shareUrl}" target="_blank" rel="noopener" class="btn-primary location-cta">
+            افتح الموقع في خرائط جوجل
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+
+        <!-- بطاقة رمز QR -->
+        <aside class="location-qr reveal">
+          <div class="qr-frame">
+            <img src="${LOCATION.qrUrl}" alt="رمز QR لموقع المعهد على خرائط جوجل" width="240" height="240" loading="lazy" />
+          </div>
+          <h3 class="qr-title">الوصول السريع</h3>
+          <p class="qr-note">امسح الكود للوصول السريع إلى مقر المعهد عبر هاتفك</p>
+          <div class="qr-address">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>${SITE.contact.address}</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>`;
+}

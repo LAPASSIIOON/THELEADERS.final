@@ -427,7 +427,6 @@ h1, h2, h3, h4, h5 {
 .form-group textarea:focus { outline: none; border-color: var(--gold); }
 .form-group textarea { resize: vertical; }
 
-.qr-code-container { text-align: center; }
 
 /* ===== FOOTER ===== */
 .footer { background: linear-gradient(180deg, var(--obsidian) 0%, var(--obsidian-deep) 100%); padding: 4rem 0 2rem; }
@@ -787,4 +786,188 @@ main, .navbar, footer, section { position: relative; z-index: 1; }
 /* --- شبكات الكروت: عمودان على التابلت (769–1024px) --- */
 @media (min-width: 769px) and (max-width: 1024px) {
   .services-grid, .trainers-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   قسم اللقاءات والتغطيات الإعلامية — Media Coverage
+   كحلي #141E36 خلفية · ذهبي #E8C468 لمسات · عاجي #F8F6EF نصوص
+   ============================================================ */
+.media-section {
+  background: var(--brand-navy, #141E36);
+  position: relative; overflow: hidden;
+}
+.media-section .section-tag { color: var(--brand-gold-light, #E8C468); }
+.media-section .section-title { color: var(--brand-ivory, #F8F6EF); }
+.media-section .section-desc { color: rgba(248,246,239,0.62); }
+.media-section .section-line { background: var(--brand-gold-light, #E8C468); }
+
+.media-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+}
+
+.media-card {
+  background: rgba(248,246,239,0.04);
+  border: 1px solid rgba(232,196,104,0.18);
+  border-radius: 16px; overflow: hidden;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transform: translateZ(0); will-change: transform;
+  transition: transform var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
+              box-shadow var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
+              border-color var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
+}
+.media-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(232,196,104,0.45);
+  box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6);
+}
+
+/* الصورة المصغّرة + الطبقة الزجاجية */
+.media-thumb {
+  position: relative; aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #1c2a4a 0%, #141E36 100%);
+  background-size: cover; background-position: center;
+}
+.media-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, rgba(20,30,54,0.25) 0%, rgba(20,30,54,0.75) 100%);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  transition: background var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
+              backdrop-filter var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
+}
+.media-card:hover .media-overlay {
+  background: linear-gradient(180deg, rgba(20,30,54,0.15) 0%, rgba(20,30,54,0.6) 100%);
+  -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0);
+}
+
+/* زر التشغيل الذهبي */
+.media-play {
+  width: 58px; height: 58px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #f3dda0 0%, #E8C468 45%, #C5A059 100%);
+  color: var(--brand-navy, #141E36);
+  border: none; cursor: pointer; padding-right: 3px;
+  box-shadow: 0 10px 26px -8px rgba(232,196,104,0.55);
+  transition: transform var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
+              box-shadow var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
+}
+.media-play:hover { transform: scale(1.1); box-shadow: 0 16px 38px -10px rgba(232,196,104,0.7); }
+.media-play--idle { opacity: 0.35; cursor: default; }
+
+/* شارة القناة */
+.media-badge {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  background: rgba(20,30,54,0.85);
+  border: 1px solid rgba(232,196,104,0.4);
+  color: var(--brand-gold-light, #E8C468);
+  font-family: var(--font-ar-head, 'Cairo', sans-serif);
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.32rem 0.85rem; border-radius: 50px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+
+.media-body { padding: 1.4rem 1.5rem 1.6rem; }
+.media-title {
+  font-family: var(--font-ar-head, 'Cairo', sans-serif);
+  font-size: 1.12rem; font-weight: 700;
+  color: var(--brand-ivory, #F8F6EF); margin-bottom: 0.6rem;
+}
+.media-desc {
+  font-size: 0.92rem; line-height: 1.8;
+  color: rgba(248,246,239,0.6); margin-bottom: 1.1rem;
+}
+.media-link {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: none; border: none; padding: 0; cursor: pointer;
+  font-family: var(--font-ar-head, 'Cairo', sans-serif);
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--brand-gold-light, #E8C468); text-decoration: none;
+  transition: gap var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
+}
+.media-link:hover { gap: 0.85rem; }
+.media-card--empty .media-title,
+.media-card--empty .media-desc { opacity: 0.55; }
+
+/* نافذة تشغيل الفيديو */
+.media-modal {
+  position: fixed; inset: 0; z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(6,10,18,0.88);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  padding: 1.5rem;
+}
+.media-modal.open { display: flex; }
+.media-modal-inner { position: relative; width: min(960px, 100%); }
+.media-modal-frame {
+  position: relative; aspect-ratio: 16 / 9;
+  border-radius: 16px; overflow: hidden;
+  border: 1px solid rgba(232,196,104,0.35);
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
+}
+.media-modal-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+.media-modal-close {
+  position: absolute; top: -46px; left: 0;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(248,246,239,0.1);
+  border: 1px solid rgba(232,196,104,0.35);
+  color: var(--brand-gold-light, #E8C468);
+  font-size: 1.5rem; line-height: 1; cursor: pointer;
+  transition: background var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
+}
+.media-modal-close:hover { background: rgba(232,196,104,0.2); }
+
+/* ============================================================
+   قسم الموقع — خريطة جوجل + رمز QR
+   ============================================================ */
+.location-section { background: var(--brand-ivory, #F8F6EF); }
+.location-grid {
+  display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.5rem; align-items: start;
+}
+
+.location-map-frame {
+  position: relative; height: 420px;
+  border-radius: 16px; overflow: hidden;
+  border: 1px solid rgba(20,30,54,0.1);
+  box-shadow: 0 25px 50px -12px rgba(20,30,54,0.22);
+}
+.location-map-frame iframe { width: 100%; height: 100%; border: 0; display: block; filter: saturate(1.05); }
+.location-cta { margin-top: 1.5rem; }
+
+/* بطاقة QR بإطار ذهبي معدني */
+.location-qr {
+  background: var(--white, #fff);
+  border-radius: 16px; padding: 2rem 1.6rem; text-align: center;
+  border: 1px solid rgba(232,196,104,0.35);
+  box-shadow: 0 25px 50px -12px rgba(20,30,54,0.16);
+}
+.qr-frame {
+  display: inline-block; padding: 12px; border-radius: 14px;
+  background: linear-gradient(135deg, #f3dda0 0%, #E8C468 45%, #A17827 100%);
+  box-shadow: 0 12px 30px -10px rgba(161,120,39,0.5);
+}
+.qr-frame img { display: block; width: 100%; max-width: 200px; height: auto; border-radius: 8px; background: var(--brand-ivory, #F8F6EF); }
+.qr-title {
+  font-family: var(--font-ar-head, 'Cairo', sans-serif);
+  font-size: 1.15rem; color: var(--brand-navy, #141E36); margin: 1.3rem 0 0.5rem;
+}
+.qr-note { font-size: 0.9rem; line-height: 1.8; color: var(--text-muted, #6b7280); }
+.qr-address {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  margin-top: 1.2rem; padding-top: 1.2rem;
+  border-top: 1px solid rgba(20,30,54,0.08);
+  font-size: 0.86rem; font-weight: 500; color: var(--brand-navy, #141E36);
+}
+.qr-address svg { color: var(--gold, #A17827); flex-shrink: 0; }
+
+/* ===== استجابة القسمين ===== */
+@media (max-width: 1024px) {
+  .media-grid { grid-template-columns: repeat(2, 1fr); }
+  .location-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .location-map-frame { height: 360px; }
+}
+@media (max-width: 768px) {
+  .media-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .location-map-frame { height: 300px; }
+  .location-cta { width: 100%; justify-content: center; }
+  .media-modal-close { top: auto; bottom: -50px; left: 50%; transform: translateX(-50%); }
 }

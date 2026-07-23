@@ -84,18 +84,6 @@
                 </div>
               </div>` : ''}
 
-              <!-- MAP -->
-              <div class="contact-map" style="margin-top:2rem">
-                <h4 style="margin-bottom:1rem;color:var(--navy)">موقعنا على الخريطة</h4>
-                <a href="${SITE.maps.googleMapsUrl}" target="_blank" rel="noopener" class="btn-primary" style="margin-bottom:1.5rem;display:inline-flex">
-                  فتح في خرائط جوجل
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                </a>
-                <div class="qr-code-container">
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.8rem">امسح الرمز للوصول للموقع:</p>
-                  <img src="${SITE.maps.qrCodeUrl}" alt="QR Code - Google Maps" width="150" height="150" style="border-radius:8px;border:1px solid rgba(0,0,0,0.05)" />
-                </div>
-              </div>
             </div>
 
             <!-- CONTACT FORM -->
@@ -132,6 +120,7 @@
         </div>
       </section>
 
+      ${getLocationSuite()}
     ` + getFooter() + getWhatsAppButton();
 
     window.handleSubmit = function(e) {
