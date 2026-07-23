@@ -1,978 +1,339 @@
-/* ===== THE LEADERS. — Arabic RTL Styles ===== */
+// ===== المكونات المشتركة =====
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=Tajawal:wght@300;400;500;700;800;900&family=Poppins:wght@300;400;500;700&display=swap');
+function getNavbar(activePage) {
+  const pages = [
+    { id: 'home', label: 'الرئيسية', href: 'index.html' },
+    { id: 'about', label: 'عن المعهد', href: 'about.html' },
+    { id: 'courses', label: 'الدورات', href: 'courses.html' },
+    { id: 'trainers', label: 'المدربون', href: 'trainers.html' },
+    { id: 'chairman', label: 'كلمة رئيس مجلس الإدارة', href: 'chairman.html' },
+    { id: 'contact', label: 'تواصل معنا', href: 'contact.html' }
+  ];
 
-/* ألوان الهوية البصرية المعتمدة — Brand Guidelines 2026 */
-:root {
-  --navy: #141e36;        /* Navy — primary */
-  --navy-light: #1c2a4a;
-  --gold: #a17827;        /* Gold Dark — details & readable gold text */
-  --gold-light: #e8c468;  /* Gold Light — accents & button fills */
-  --gold-dark: #a17827;
-  --white: #ffffff;
-  --off-white: #f8f6ef;   /* Ivory — surfaces */
-  --cream: #f8f6ef;
-  --light-gray: #eee;
-  --text-dark: #1a1a2e;
-  --text-muted: #6b7280;
-  --font-ar: 'Tajawal', sans-serif;
-  --font-ar-head: 'Cairo', 'Tajawal', sans-serif; /* عناوين وقوائم — الخط الرسمي */
-  --font-en: 'Poppins', 'Tajawal', sans-serif;
-  /* أسماء الهوية الرسمية (Brand Guidelines 2026) */
-  --brand-navy: #141e36;
-  --brand-gold-light: #e8c468;
-  --brand-gold-dark: #a17827;
-  --brand-ivory: #f8f6ef;
-}
+  const linksHTML = pages.map(p => {
+    const isActive = p.id === activePage ? ' active' : '';
+    return `<li><a href="${p.href}" class="${isActive}">${p.label}</a></li>`;
+  }).join('');
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
-
-body {
-  font-family: 'Tajawal', sans-serif;
-  color: var(--text-dark);
-  background: var(--white);
-  overflow-x: hidden;
-  direction: rtl;
-}
-
-h1, h2, h3, h4, h5 {
-  font-family: var(--font-ar-head); /* Cairo — العناوين الرسمية */
-  font-weight: 700;
-}
-
-/* ===== PRELOADER ===== */
-.preloader {
-  position: fixed; inset: 0; background: var(--navy);
-  z-index: 9999; display: flex; align-items: center;
-  justify-content: center; flex-direction: column;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-.preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.preloader-logo {
-  font-family: var(--font-en); font-size: 2.2rem;
-  font-weight: 700; color: var(--gold-light); letter-spacing: 6px;
-  animation: fadeInUp 1s ease;
-}
-.preloader-tagline {
-  font-family: var(--font-ar); font-size: 0.9rem;
-  color: rgba(255,255,255,0.55); margin-top: 0.8rem; letter-spacing: 0;
-  animation: fadeInUp 1.2s ease;
-}
-.preloader-bar {
-  width: 60px; height: 2px; background: var(--gold);
-  margin-top: 1.5rem; animation: expandBar 1.5s ease infinite;
+  return `
+  <div class="preloader" id="preloader">
+    <div class="preloader-logo">${SITE.nameEn}</div>
+    <div class="preloader-tagline">${SITE.tagline}</div>
+    <div class="preloader-bar"></div>
+  </div>
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <img src="${SITE.logo}" alt="${SITE.nameEn}" />
+        <span class="nav-logo-text">
+          <span class="en">THE LEADERS</span>
+          <span class="ar">${SITE.nameAr}</span>
+        </span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        ${linksHTML}
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>`;
 }
 
-@keyframes expandBar { 0%,100%{width:60px;opacity:.3} 50%{width:120px;opacity:1} }
-@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-
-/* ===== NAVBAR ===== */
-.navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  padding: 1rem 0; transition: all 0.4s ease;
-}
-.navbar.scrolled {
-  background: #141E36; backdrop-filter: blur(20px);
-  padding: 0.8rem 0; box-shadow: 0 4px 30px rgba(0,0,0,0.15);
-}
-.navbar .container { display: flex; align-items: center; justify-content: space-between; }
-.nav-logo { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
-.nav-logo img { height: 66px; width: auto; filter: drop-shadow(0 0 9px rgba(232,196,104,0.3)); transition: filter var(--dur-luxe, 0.8s) cubic-bezier(0.16,1,0.3,1); }
-.navbar.scrolled .nav-logo img { height: 58px; }
-.nav-logo:hover img { filter: drop-shadow(0 0 18px rgba(232,196,104,0.65)); }
-.nav-logo-text { display: flex; flex-direction: column; line-height: 1.3; }
-.nav-logo-text .en { font-family: var(--font-en); font-weight: 700; font-size: 1.42rem; letter-spacing: 2.6px; color: var(--white); }
-.nav-logo-text .ar { font-size: 0.84rem; color: var(--gold-light); font-weight: 500; }
-.footer-logo { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
-.footer-logo img { height: 50px; width: auto; }
-
-.nav-links {
-  display: flex; align-items: center; gap: 2.3rem;
-  list-style: none;
-}
-.nav-links a {
-  color: rgba(255,255,255,0.88); text-decoration: none;
-  font-family: var(--font-ar-head); /* Cairo — خط القوائم الرسمي */
-  font-size: 1.12rem; font-weight: 700; letter-spacing: 0.2px; position: relative;
-  transition: color 0.4s var(--ease-luxe, ease), text-shadow 0.4s var(--ease-luxe, ease);
-}
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; right: 0;
-  width: 0; height: 1.5px; background: var(--gold-light); transition: width 0.3s ease;
-}
-.nav-links a:hover, .nav-links a.active { color: var(--gold-light); text-shadow: 0 0 16px rgba(232,196,104,0.5); }
-.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-
-.hamburger {
-  display: none; flex-direction: column; gap: 5px;
-  cursor: pointer; z-index: 1001;
-}
-.hamburger span { width: 25px; height: 2px; background: var(--white); transition: all 0.3s ease; }
-.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
-.hamburger.active span:nth-child(2) { opacity: 0; }
-.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
-
-/* ===== CONTAINER ===== */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-
-/* ===== PAGE HERO ===== */
-.page-hero {
-  background: var(--navy); padding: 10rem 0 4rem; text-align: center;
-}
-.page-hero .section-tag { color: var(--gold-light); }
-.page-hero-title {
-  font-size: 3rem; color: var(--white); font-weight: 800;
-}
-.page-hero-title .gold { color: var(--gold-light); }
-.page-hero .section-desc { color: rgba(255,255,255,0.6); }
-
-/* ===== HERO ===== */
-.hero {
-  position: relative; min-height: 100vh; display: flex;
-  align-items: center; overflow: hidden;
-  background:
-    radial-gradient(1100px 640px at 72% 18%, #1c2b52 0%, var(--navy) 42%, var(--obsidian) 78%, var(--obsidian-deep) 100%);
-}
-/* إضاءة حجمية ذهبية خلف منطقة العنوان (Volumetric glow) */
-.hero::after {
-  content: ''; position: absolute; z-index: 1; pointer-events: none;
-  top: 18%; right: 4%; width: 640px; height: 640px;
-  background: radial-gradient(circle, rgba(232,196,104,0.09) 0%, transparent 62%);
-  filter: blur(8px);
-}
-.hero-bg-pattern {
-  position: absolute; inset: 0; opacity: 0.03;
-  background-image:
-    radial-gradient(circle at 25% 25%, var(--gold) 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, var(--gold) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-.hero-gradient {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(20,30,54,0.95) 0%, rgba(20,30,54,0.7) 50%, rgba(20,30,54,0.4) 100%);
-}
-.hero-content {
-  position: relative; z-index: 2;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 4rem; align-items: center; padding: 8rem 0 4rem;
-}
-.hero-text { color: var(--white); }
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: rgba(161,120,39,0.12); border: 1px solid rgba(161,120,39,0.25);
-  padding: 0.5rem 1.2rem; border-radius: 50px;
-  font-size: 0.78rem; color: var(--gold-light); font-weight: 500; margin-bottom: 2rem;
-}
-.hero-badge::before {
-  content: ''; width: 7px; height: 7px;
-  background: var(--gold-light); border-radius: 50%;
-  animation: gentlePulse 3s ease-in-out infinite;
-}
-@keyframes gentlePulse {
-  0%,100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(232,196,104,0.4); }
-  50% { opacity: 1; box-shadow: 0 0 0 5px rgba(232,196,104,0); }
-}
-.hero-title { font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 0.5rem; color: var(--white); }
-.hero-title .gold { color: var(--gold-light); display: block; }
-.hero-title .light { font-weight: 400; }
-.hero-title .en { font-family: var(--font-en); letter-spacing: 1px; }
-.hero-tagline {
-  font-size: 1.2rem; letter-spacing: 2px; color: rgba(255,255,255,0.5);
-  margin-bottom: 1.5rem;
-}
-.hero-description {
-  font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.7);
-  margin-bottom: 2.5rem; max-width: 500px;
-}
-.hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: var(--gold-light); color: var(--navy);
-  padding: 1rem 2.2rem; text-decoration: none;
-  font-size: 0.9rem; font-weight: 700;
-  transition: all 0.3s ease; border: 2px solid var(--gold-light);
-  font-family: 'Tajawal', sans-serif; cursor: pointer;
-}
-.btn-primary:hover {
-  background: transparent; color: var(--gold-light);
-  transform: translateY(-2px); box-shadow: 0 10px 30px rgba(161,120,39,0.2);
-}
-.btn-secondary {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: transparent; color: var(--white);
-  padding: 1rem 2.2rem; text-decoration: none;
-  font-size: 0.9rem; font-weight: 700;
-  border: 1.5px solid rgba(255,255,255,0.3);
-  transition: all 0.3s ease;
-  font-family: 'Tajawal', sans-serif; cursor: pointer;
-}
-.btn-secondary:hover {
-  border-color: var(--gold); color: var(--gold); transform: translateY(-2px);
+function getFooter() {
+  return `
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="${SITE.logo}" alt="${SITE.nameAr}" />
+            <span class="nav-logo-text">
+              <span class="en">THE LEADERS</span>
+              <span class="ar">${SITE.nameAr}</span>
+            </span>
+          </div>
+          <p>${SITE.nameAr} — ${SITE.tagline}</p>
+          <div class="footer-accreditation">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>${SITE.accreditation.line}</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>روابط سريعة</h4>
+          <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="about.html">عن المعهد</a></li>
+            <li><a href="courses.html">الدورات</a></li>
+            <li><a href="trainers.html">المدربون</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>المسارات التدريبية</h4>
+          <ul>
+            ${TRACKS.map(t => '<li><a href="course-detail.html?id=' + t.id + '">' + t.title + '</a></li>').join('')}
+            <li><a href="chairman.html">كلمة رئيس مجلس الإدارة</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>تواصل معنا</h4>
+          <div class="footer-contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>${SITE.contact.address}</span>
+          </div>
+          <div class="footer-contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>${SITE.contact.email}</span>
+          </div>
+          ${SITE.contact.phone ? `
+          <div class="footer-contact-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>${SITE.contact.phone}</span>
+          </div>` : ''}
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; ${new Date().getFullYear()} ${SITE.nameEn}. جميع الحقوق محفوظة.</p>
+        <div class="footer-socials">
+          ${SITE.social.instagram ? `<a href="${SITE.social.instagram}" aria-label="Instagram" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>` : ''}
+          ${SITE.social.linkedin ? `<a href="${SITE.social.linkedin}" aria-label="LinkedIn" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>` : ''}
+          ${SITE.social.twitter ? `<a href="${SITE.social.twitter}" aria-label="Twitter" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>` : ''}
+        </div>
+      </div>
+    </div>
+  </footer>`;
 }
 
-.hero-image { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
-.hero-image-wrapper {
-  position: relative; width: 380px; height: 460px;
-  border-radius: 8px; overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); /* فصل نظيف عن الخلفية */
-  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
-}
-.hero-image-wrapper:hover { transform: scale(1.02) rotateY(-2deg); }
-.hero-image-wrapper::before {
-  content: ''; position: absolute; inset: 0;
-  border: 1px solid rgba(161,120,39,0.2);
-  border-radius: 8px; z-index: 2; pointer-events: none;
-}
-.hero-image-wrapper img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-.hero-image-frame {
-  position: absolute; top: -15px; left: -15px;
-  width: 120px; height: 120px;
-  border: 1px solid rgba(161,120,39,0.3); z-index: -1;
-}
-.hero-image-frame-2 {
-  position: absolute; bottom: -15px; right: -15px;
-  width: 100px; height: 100px;
-  border: 1px solid rgba(161,120,39,0.2); z-index: -1;
+function getWhatsAppButton() {
+  if (!SITE.contact.whatsapp) return '';
+  return `
+  <a href="https://wa.me/${SITE.contact.whatsapp}?text=${encodeURIComponent(SITE.contact.whatsappMessage)}" class="whatsapp-float" id="whatsappFloat" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>`;
 }
 
-/* ===== MARQUEE — شريط فاخر داكن، بطيء، يتوقف عند التمرير، بتلاشٍ جانبي ===== */
-.marquee-banner {
-  background: linear-gradient(180deg, var(--navy) 0%, var(--obsidian) 100%);
-  border-top: 1px solid rgba(232,196,104,0.18);
-  border-bottom: 1px solid rgba(232,196,104,0.18);
-  padding: 1.05rem 0; overflow: hidden; white-space: nowrap;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-}
-.marquee-content { display: inline-flex; animation: marqueeRTL var(--mdur, 180s) linear infinite; will-change: transform; }
-.marquee-banner:hover .marquee-content { animation-play-state: paused; }
-.marquee-content span {
-  font-family: 'Tajawal', sans-serif; font-size: 0.92rem;
-  font-weight: 700; color: var(--gold-light); padding: 0 3rem; letter-spacing: 1px;
-}
-.marquee-content span::after { content: '◆'; margin-right: 3rem; color: var(--gold); opacity: 0.5; font-size: 0.55rem; vertical-align: middle; }
-@keyframes marqueeRTL { from{transform:translateX(0)} to{transform:translateX(50%)} }
+/* ============================================================
+   1) اللقاءات والتغطيات الإعلامية — Media Coverage
+   ------------------------------------------------------------
+   لإضافة لقاء حقيقي: ضع عنصرًا في MEDIA_ITEMS بالشكل التالي
+   (يكفي معرّف فيديو يوتيوب — الصورة المصغّرة تُجلب تلقائيًا):
 
-/* ===== SECTIONS ===== */
-.section { padding: 7rem 0; }
-.section-header { text-align: center; margin-bottom: 4rem; }
-.section-tag {
-  font-size: 0.9rem; letter-spacing: 2px;
-  color: var(--gold); display: block; margin-bottom: 1rem; font-weight: 600;
-}
-.section-title { font-size: 2.8rem; font-weight: 800; color: var(--navy); line-height: 1.2; margin-bottom: 1rem; }
-.section-title .gold { color: var(--gold); }
-.section-line { width: 60px; height: 2px; background: var(--gold); margin: 1.5rem auto; }
-.section-desc { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+   { badge: 'تلفزيون الكويت',
+     title: 'عنوان اللقاء',
+     desc:  'وصف مختصر للقاء أو التغطية.',
+     youtubeId: 'XXXXXXXXXXX' }
 
-/* ===== ABOUT ===== */
-.about { background: var(--off-white); }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-.about-image { position: relative; }
-.about-image-main { width: 100%; border-radius: 6px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); transition: transform 0.5s ease; }
-.about-image:hover .about-image-main { transform: rotateY(-3deg) scale(1.02); }
-.about-experience {
-  position: absolute; bottom: -20px; left: -20px;
-  background: var(--navy); color: var(--white);
-  padding: 1.5rem 2rem; border-radius: 6px;
-  text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-.about-experience h3 { font-size: 2.5rem; color: var(--gold-light); line-height: 1; }
-.about-experience p { font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.7); margin-top: 0.3rem; }
-.about-text h2 { font-size: 2.5rem; color: var(--navy); margin-bottom: 1.5rem; line-height: 1.2; }
-.about-text h2 .gold { color: var(--gold); }
-.about-text p { font-size: 1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem; }
-.about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
-.about-feature { display: flex; align-items: flex-start; gap: 0.8rem; }
-.about-feature-icon {
-  width: 40px; height: 40px; min-width: 40px;
-  background: rgba(161,120,39,0.1); border-radius: 6px;
-  display: flex; align-items: center; justify-content: center; color: var(--gold);
-}
-.about-feature h4 { font-size: 0.9rem; font-weight: 600; color: var(--navy); margin-bottom: 0.2rem; }
-.about-feature p { font-size: 0.8rem; margin-bottom: 0; }
+   وإن كانت التغطية صحفية بلا فيديو، استخدم link بدل youtubeId:
+   { badge: 'تغطية صحفية', title: '...', desc: '...',
+     link: 'https://...', thumb: 'media/cover1.jpg' }
 
-/* ===== SERVICES / COURSES GRID ===== */
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.service-card {
-  background: var(--white); padding: 3rem 2.5rem; border-radius: 8px;
-  transition: all 0.4s ease; position: relative; overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.05);
-  perspective: 800px;
-}
-.service-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 3px; background: var(--gold);
-  transform: scaleX(0); transition: transform 0.4s ease;
-  transform-origin: right;
-}
-.service-card:hover {
-  transform: translateY(-8px) rotateX(2deg);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-}
-.service-card:hover::before { transform: scaleX(1); }
-.service-icon {
-  width: 60px; height: 60px; background: var(--navy);
-  border-radius: 8px; display: flex; align-items: center;
-  justify-content: center; margin-bottom: 1.5rem; color: var(--gold-light);
-  transition: all 0.3s ease;
-}
-.service-card:hover .service-icon { background: var(--gold-light); color: var(--navy); }
-.service-card h3 { font-size: 1.3rem; color: var(--navy); margin-bottom: 1rem; }
-.service-card p { font-size: 0.95rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.5rem; }
-.service-link {
-  font-size: 0.85rem; font-weight: 700; color: var(--gold);
-  text-decoration: none; display: inline-flex; align-items: center;
-  gap: 0.5rem; transition: gap 0.3s ease;
-}
-.service-link:hover { gap: 0.8rem; }
+   ما دامت المصفوفة فارغة تُعرض بطاقات "قريبًا" — بلا أي ادعاء غير موثّق.
+   ============================================================ */
+const MEDIA_ITEMS = [
+  { badge: 'من قاعات المعهد',
+    title: 'جانب من إحدى الجلسات التدريبية',
+    desc:  'لقطة من قاعة التدريب أثناء انعقاد إحدى الجلسات بحضور المشاركين.',
+    image: 'media/training-hall.jpg' },
 
-/* ===== PARTNERS ===== */
-.partners-section { background: var(--off-white); }
-.partners-placeholder {
-  text-align: center; padding: 4rem 2rem;
-  border: 2px dashed rgba(161,120,39,0.2); border-radius: 12px;
-  max-width: 600px; margin: 0 auto;
-}
-.partners-placeholder p {
-  font-size: 1.2rem; color: var(--text-muted); font-weight: 500;
-}
+  { badge: 'صورة جماعية',
+    title: 'المشاركون والقائمون على البرنامج',
+    desc:  'صورة تجمع المشاركين وفريق المعهد على هامش أحد البرامج التدريبية.',
+    image: 'media/group-photo.jpg' },
 
-/* ===== CTA ===== */
-.cta {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-  padding: 6rem 0; text-align: center; position: relative; overflow: hidden;
-}
-.cta::before {
-  content: ''; position: absolute; top: 0; right: 50%;
-  transform: translateX(50%); width: 1px; height: 60px;
-  background: var(--gold);
-}
-.cta-title { font-size: 3rem; color: var(--white); margin-bottom: 1rem; }
-.cta-title .gold { color: var(--gold-light); }
-.cta-desc { font-size: 1.05rem; color: rgba(255,255,255,0.6); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; }
-.cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  { badge: 'ورشة تدريبية',
+    title: 'لحظة من ورشة تفاعلية',
+    desc:  'المدرّب أثناء تقديم إحدى الورش التدريبية التفاعلية داخل المعهد.',
+    image: 'media/session-speaker.jpg' }
+];
 
-/* ===== CHAIRMAN ===== */
-.chairman-section { background: var(--off-white); }
-.chairman-content {
-  display: grid; grid-template-columns: 300px 1fr;
-  gap: 4rem; align-items: start;
-}
-.chairman-image img {
-  width: 100%; border-radius: 8px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-  position: sticky; top: 100px;
-}
-.chairman-text { font-size: 1.1rem; line-height: 2; color: var(--text-dark); }
-.chairman-text p { margin-bottom: 1.5rem; }
-.chairman-signature {
-  margin-top: 3rem; display: flex; flex-direction: column;
-  align-items: flex-start; gap: 0.5rem;
-}
-.chairman-sign-line { width: 100px; height: 2px; background: var(--gold); }
-.chairman-signature span { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+function getMediaSection() {
+  var cards;
 
-/* ===== TRAINERS ===== */
-.trainers-section { background: var(--off-white); }
-.trainers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.trainer-card {
-  background: var(--white); border-radius: 12px; overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-  transition: all 0.4s ease;
-}
-.trainer-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-.trainer-image { height: 280px; overflow: hidden; }
-.trainer-image img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.5s ease; }
-.trainer-card:hover .trainer-image img { transform: scale(1.05); }
-.trainer-placeholder {
-  width: 100%; height: 100%; background: var(--navy);
-  display: flex; align-items: center; justify-content: center;
-}
-.trainer-info { padding: 1.5rem; }
-.trainer-info h3 { font-size: 1.2rem; color: var(--navy); margin-bottom: 0.3rem; }
-.trainer-title { font-size: 0.85rem; color: var(--gold); margin-bottom: 0.8rem; font-weight: 600; }
-.trainer-bio { font-size: 0.9rem; line-height: 1.7; color: var(--text-muted); }
+  if (MEDIA_ITEMS.length) {
+    cards = MEDIA_ITEMS.map(function (m) {
+      var thumb = m.image || m.thumb || (m.youtubeId
+        ? 'https://img.youtube.com/vi/' + m.youtubeId + '/maxresdefault.jpg'
+        : '');
+      var esc = function (s) { return String(s || '').replace(/'/g, "\\'"); };
+      var action = m.youtubeId
+        ? 'onclick="openMediaModal(\'' + m.youtubeId + '\')"'
+        : (m.image ? 'onclick="openMediaImage(\'' + esc(m.image) + '\',\'' + esc(m.title) + '\')"' : '');
+      var media = m.youtubeId
+        ? '<button class="media-play" type="button" ' + action + ' aria-label="تشغيل: ' + m.title + '">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M8 5v14l11-7z"/></svg>' +
+          '</button>'
+        : m.image
+        ? '<button class="media-play" type="button" ' + action + ' aria-label="تكبير الصورة: ' + m.title + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="21" height="21"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+          '</button>'
+        : '<a class="media-play" href="' + (m.link || '#') + '" target="_blank" rel="noopener" aria-label="قراءة: ' + m.title + '">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+          '</a>';
 
-/* ===== CONTACT ===== */
-.contact-section { background: var(--off-white); }
-.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
-.contact-info-item {
-  display: flex; align-items: flex-start; gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.contact-info-icon {
-  width: 48px; height: 48px; min-width: 48px;
-  background: rgba(161,120,39,0.1); border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gold);
-}
-.contact-info-item h4 { font-size: 0.9rem; color: var(--navy); margin-bottom: 0.2rem; }
-.contact-info-item p { font-size: 0.9rem; color: var(--text-muted); }
-
-.contact-form-wrapper h2 { font-size: 1.8rem; color: var(--navy); margin-bottom: 1.5rem; }
-.form-group { margin-bottom: 1.2rem; }
-.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
-.form-group input,
-.form-group textarea {
-  width: 100%; padding: 0.8rem 1rem; border: 1.5px solid rgba(0,0,0,0.08);
-  border-radius: 6px; font-family: 'Tajawal', sans-serif;
-  font-size: 0.95rem; transition: border-color 0.3s ease;
-  background: var(--white);
-}
-.form-group input:focus,
-.form-group textarea:focus { outline: none; border-color: var(--gold); }
-.form-group textarea { resize: vertical; }
-
-
-/* ===== FOOTER ===== */
-.footer { background: linear-gradient(180deg, var(--obsidian) 0%, var(--obsidian-deep) 100%); padding: 4rem 0 2rem; }
-.footer-grid {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr;
-  gap: 3rem; padding-bottom: 3rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.footer-brand p { font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 300px; }
-.footer-col h4 {
-  font-size: 0.8rem; letter-spacing: 2px;
-  color: var(--gold-light); margin-bottom: 1.5rem; font-weight: 700;
-}
-.footer-col ul { list-style: none; }
-.footer-col ul li { margin-bottom: 0.8rem; }
-.footer-col ul li a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
-.footer-col ul li a:hover { color: var(--gold-light); }
-.footer-contact-item { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
-.footer-contact-item svg { width: 16px; height: 16px; color: var(--gold-light); min-width: 16px; }
-.footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 2rem; }
-.footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
-.footer-socials { display: flex; gap: 1rem; }
-.footer-socials a {
-  width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50%; display: flex; align-items: center;
-  justify-content: center; color: rgba(255,255,255,0.5);
-  text-decoration: none; transition: all 0.3s ease;
-}
-.footer-socials a:hover { border-color: var(--gold-light); color: var(--gold-light); transform: translateY(-2px); }
-
-/* ===== WHATSAPP FLOAT ===== */
-.whatsapp-float {
-  position: fixed; bottom: 24px; left: 24px;
-  width: 60px; height: 60px;
-  background: #25d366; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
-  z-index: 999; transition: all 0.3s ease;
-  animation: whatsappPulse 2s ease infinite;
-}
-.whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(37,211,102,0.5); }
-@keyframes whatsappPulse {
-  0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4)}
-  50%{box-shadow:0 4px 30px rgba(37,211,102,0.6)}
-}
-
-/* ===== HERO 3D & MOTION ===== */
-#heroParticles {
-  position: absolute; inset: 0; z-index: 1;
-  pointer-events: none;
-}
-.hero .container { position: relative; z-index: 2; }
-.hero-watermark {
-  position: absolute; bottom: -10%; left: -5%;
-  width: 580px; opacity: 0.04; z-index: 0;
-  pointer-events: none; will-change: transform;
-}
-@media (max-width: 1024px) {
-  .hero-watermark { width: 260px; }
-}
-
-/* ===== ACCREDITATION (الاعتماد الرسمي) ===== */
-.accreditation-strip {
-  background: var(--navy); border-top: 1px solid rgba(232,196,104,0.25);
-  padding: 1.6rem 0;
-}
-.accreditation-strip .container {
-  display: flex; align-items: center; justify-content: center;
-  gap: 2.5rem; flex-wrap: wrap;
-}
-.accreditation-item {
-  display: flex; align-items: center; gap: 0.7rem;
-  color: rgba(255,255,255,0.85); font-size: 0.95rem; font-weight: 500;
-}
-.accreditation-item svg { color: var(--gold-light); min-width: 20px; }
-.accreditation-label {
-  font-size: 0.75rem; letter-spacing: 2px; color: var(--gold-light);
-  font-weight: 700; white-space: nowrap;
-}
-.accreditation-section { background: var(--off-white); }
-.accreditation-card {
-  background: var(--white); border: 1px solid rgba(161,120,39,0.15);
-  border-radius: 12px; padding: 2.5rem; text-align: center;
-  transition: all 0.4s ease;
-}
-.accreditation-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(20,30,54,0.08); }
-.accreditation-card h3 { font-size: 1.15rem; color: var(--navy); margin: 1rem 0 0.5rem; }
-.accreditation-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
-.accreditation-icon {
-  width: 64px; height: 64px; margin: 0 auto;
-  background: rgba(232,196,104,0.15); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; color: var(--gold);
-}
-
-/* ===== CHAIRMAN QUOTE (الرئيسية) ===== */
-.chairman-quote-section { background: var(--navy); position: relative; overflow: hidden; }
-.chairman-quote-grid {
-  display: grid; grid-template-columns: 260px 1fr;
-  gap: 3.5rem; align-items: center; position: relative; z-index: 2;
-}
-.chairman-quote-image img {
-  width: 100%; border-radius: 10px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-  border: 1px solid rgba(232,196,104,0.25);
-}
-.chairman-quote-text blockquote {
-  font-size: 1.7rem; font-weight: 700; color: var(--white);
-  line-height: 1.7; margin: 1rem 0 1.5rem; border: none;
-}
-.chairman-quote-text blockquote::before { content: '\201C'; color: var(--gold-light); font-size: 2.2rem; margin-left: 0.3rem; }
-.chairman-quote-name { color: var(--gold-light); font-weight: 700; font-size: 1rem; }
-.chairman-quote-role { color: rgba(255,255,255,0.55); font-size: 0.85rem; margin-top: 0.2rem; }
-.chairman-sign-role { font-size: 0.9rem; color: var(--text-muted); }
-
-/* ===== FOOTER ACCREDITATION LINE ===== */
-.footer-accreditation {
-  display: flex; align-items: flex-start; gap: 0.6rem;
-  margin-top: 1.2rem; padding-top: 1.2rem;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.5); font-size: 0.8rem; line-height: 1.7; max-width: 320px;
-}
-.footer-accreditation svg { color: var(--gold-light); min-width: 15px; margin-top: 2px; }
-
-@media (max-width: 1024px) {
-  .chairman-quote-grid { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
-  .chairman-quote-image { max-width: 240px; margin: 0 auto; }
-}
-@media (max-width: 768px) {
-  .chairman-quote-text blockquote { font-size: 1.3rem; }
-  .accreditation-strip .container { gap: 1rem; flex-direction: column; }
-}
-
-/* احترام تفضيل تقليل الحركة */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important; /* المفتاح: يمنع الوميض الاستروبي للحركات اللانهائية */
-    transition-duration: 0.01ms !important;
+      return '' +
+      '<article class="media-card reveal">' +
+        '<div class="media-thumb"' + (thumb ? ' style="background-image:url(\'' + thumb + '\')"' : '') + '>' +
+          '<span class="media-badge">' + m.badge + '</span>' +
+          '<div class="media-overlay">' + media + '</div>' +
+        '</div>' +
+        '<div class="media-body">' +
+          '<h3 class="media-title">' + m.title + '</h3>' +
+          '<p class="media-desc">' + m.desc + '</p>' +
+          (m.youtubeId || m.image
+            ? '<button class="media-link" type="button" ' + action + '>' + (m.youtubeId ? 'مشاهدة اللقاء' : 'عرض الصورة') +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></button>'
+            : '<a class="media-link" href="' + (m.link || '#') + '" target="_blank" rel="noopener">فتح المصدر' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 18 9 12 15 6"/></svg></a>') +
+        '</div>' +
+      '</article>';
+    }).join('');
+  } else {
+    // حالة "قريبًا" — ثلاث بطاقات هيكلية بنفس التصميم دون محتوى مُفترض
+    cards = [1, 2, 3].map(function () {
+      return '' +
+      '<article class="media-card media-card--empty reveal">' +
+        '<div class="media-thumb">' +
+          '<span class="media-badge">قريبًا</span>' +
+          '<div class="media-overlay">' +
+            '<span class="media-play media-play--idle" aria-hidden="true">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M8 5v14l11-7z"/></svg>' +
+            '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="media-body">' +
+          '<h3 class="media-title">يُضاف قريبًا</h3>' +
+          '<p class="media-desc">تُنشر هنا لقاءات المعهد وقياداته وتغطياته الإعلامية فور توفّرها.</p>' +
+        '</div>' +
+      '</article>';
+    }).join('');
   }
-  html { scroll-behavior: auto; }
-  .reveal, .reveal-left, .reveal-right { opacity: 1; transform: none; }
-  /* الاستثناء الوحيد: شريط المسارات محتوى وظيفي — يستمر بزحف بطيء مريح */
-  .marquee-content {
-    animation-duration: var(--mdur, 180s) !important;
-    animation-iteration-count: infinite !important;
-    animation-play-state: running !important;
+
+  return `
+  <section class="section media-section" id="media">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">الإعلام</span>
+        <h2 class="section-title">اللقاءات والتغطيات <span class="gold">الإعلامية</span></h2>
+        <div class="section-line"></div>
+        <p class="section-desc">مقتطفات من ظهور المعهد وقياداته في الوسائل الإعلامية والتلفزيونية</p>
+      </div>
+      <div class="media-grid">${cards}</div>
+    </div>
+
+    <!-- نافذة تشغيل الفيديو -->
+    <div class="media-modal" id="mediaModal" role="dialog" aria-modal="true" aria-label="مشغّل الفيديو" onclick="if(event.target===this)closeMediaModal()">
+      <div class="media-modal-inner">
+        <button class="media-modal-close" type="button" onclick="closeMediaModal()" aria-label="إغلاق">&times;</button>
+        <div class="media-modal-frame" id="mediaModalVideo">
+          <iframe id="mediaModalFrame" src="" title="فيديو" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        </div>
+        <img class="media-modal-image" id="mediaModalImage" src="" alt="" />
+      </div>
+    </div>
+  </section>`;
+}
+
+/* فتح/إغلاق نافذة الفيديو (youtube-nocookie لحماية الخصوصية) */
+function openMediaModal(videoId) {
+  var m = document.getElementById('mediaModal');
+  var f = document.getElementById('mediaModalFrame');
+  var v = document.getElementById('mediaModalVideo');
+  var img = document.getElementById('mediaModalImage');
+  if (!m || !f) return;
+  if (img) { img.style.display = 'none'; img.src = ''; }
+  if (v) v.style.display = '';
+  f.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* عرض صورة بالحجم الكامل داخل النافذة نفسها */
+function openMediaImage(src, alt) {
+  var m = document.getElementById('mediaModal');
+  var v = document.getElementById('mediaModalVideo');
+  var img = document.getElementById('mediaModalImage');
+  if (!m || !img) return;
+  if (v) v.style.display = 'none';
+  img.src = src;
+  img.alt = alt || '';
+  img.style.display = 'block';
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMediaModal() {
+  var m = document.getElementById('mediaModal');
+  var f = document.getElementById('mediaModalFrame');
+  if (!m) return;
+  var img = document.getElementById('mediaModalImage');
+  m.classList.remove('open');
+  if (f) f.src = '';
+  if (img) { img.src = ''; img.style.display = 'none'; }
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeMediaModal();
+});
+
+/* ============================================================
+   2) الموقع والوصول — خريطة جوجل + رمز QR
+   الإحداثيات ومعرّف المكان مأخوذان من رابط الخريطة الرسمي للمعهد
+   ============================================================ */
+const LOCATION = {
+  lat: 29.3415005,
+  lng: 48.0259086,
+  shareUrl: 'https://maps.app.goo.gl/37E4Ru8BX2apz1dv7',
+  get embedUrl() {
+    return 'https://maps.google.com/maps?q=' + this.lat + ',' + this.lng +
+           '&z=17&hl=ar&output=embed';
+  },
+  get qrUrl() {
+    return 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=6' +
+           '&color=141E36&bgcolor=F8F6EF&data=' + encodeURIComponent(this.shareUrl);
   }
-  .marquee-banner:hover .marquee-content { animation-play-state: paused !important; }
-}
+};
 
-/* ===== ANIMATIONS ===== */
-.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
-.reveal.active { opacity: 1; transform: translateY(0); }
-.reveal-left { opacity: 0; transform: translateX(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
-.reveal-left.active { opacity: 1; transform: translateX(0); }
-.reveal-right { opacity: 0; transform: translateX(-40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
-.reveal-right.active { opacity: 1; transform: translateX(0); }
+function getLocationSuite() {
+  return `
+  <section class="section location-section" id="location">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">الموقع</span>
+        <h2 class="section-title">مقر <span class="gold">المعهد</span></h2>
+        <div class="section-line"></div>
+        <p class="section-desc">${SITE.contact.addressFull}</p>
+      </div>
 
-/* ===== 3D SUBTLE EFFECTS ===== */
-.hero-image-wrapper { perspective: 1000px; }
-.service-card { perspective: 800px; }
-.trainer-card { transform-style: preserve-3d; }
+      <div class="location-grid">
+        <!-- الخريطة -->
+        <div class="location-map reveal">
+          <div class="location-map-frame">
+            <iframe src="${LOCATION.embedUrl}" title="موقع معهد القادة الدولية على خرائط جوجل"
+                    loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen></iframe>
+          </div>
+          <a href="${LOCATION.shareUrl}" target="_blank" rel="noopener" class="btn-primary location-cta">
+            افتح الموقع في خرائط جوجل
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-  .hero-content { grid-template-columns: 1fr; text-align: center; gap: 3rem; padding-top: 7rem; }
-  .hero-text { order: 1; } .hero-image { order: 0; }
-  .hero-description { margin: 0 auto 2.5rem; }
-  .hero-buttons, .hero-stats { justify-content: center; }
-  .hero-image-wrapper { width: 300px; height: 370px; }
-  .hero-title { font-size: 3rem; }
-  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .trainers-grid { grid-template-columns: repeat(2, 1fr); }
-  .chairman-content { grid-template-columns: 1fr; gap: 2rem; }
-  .chairman-image { max-width: 300px; margin: 0 auto; }
-  .chairman-image img { position: static; }
-  .contact-grid { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 768px) {
-  .nav-links {
-    position: fixed; top: 0; left: -100%;
-    width: 74%; height: 100vh;
-    height: 100dvh;                  /* ارتفاع دقيق على iOS Safari */
-    z-index: 1001;                   /* فوق باقي عناصر الهيدر */
-    overflow-y: auto;                /* تمرير آمن على الشاشات القصيرة */
-    background: rgba(20,30,54,0.97); /* كحلي الهوية */
-    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-    box-shadow: 20px 0 60px rgba(0,0,0,0.5);
-    flex-direction: column; justify-content: center;
-    align-items: center; gap: 2rem; transition: left 0.4s ease;
-  }
-  .nav-links.active { left: 0; }
-  .hamburger { display: flex; }
-  .hero-title { font-size: 2.3rem; }
-  .hero-stats { gap: 2rem; }
-  .section { padding: 5rem 0; }
-  .section-title { font-size: 2rem; }
-  .services-grid { grid-template-columns: 1fr; }
-  .trainers-grid { grid-template-columns: 1fr; }
-  .cta-title { font-size: 2rem; }
-  .page-hero-title { font-size: 2.2rem; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
-  .whatsapp-float { bottom: 16px; left: 16px; width: 52px; height: 52px; }
-}
-
-@media (max-width: 480px) {
-  .hero-title { font-size: 1.8rem; }
-  .hero-image-wrapper { width: 250px; height: 310px; }
-  .btn-primary, .btn-secondary { padding: 0.8rem 1.5rem; font-size: 0.82rem; }
-}
-
-
-/* ============================================================
-   V3 LUXURY LAYER — نظام الحركة والفخامة الموحّد
-   المنحنى المعتمد: cubic-bezier(0.16,1,0.3,1) · المدة: 0.6–0.8s
-   ============================================================ */
-:root {
-  --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
-  --dur-luxe: 0.8s;
-  --obsidian: #0b132b;       /* Deep Obsidian Navy */
-  --obsidian-deep: #060a12;  /* أعمق طبقة فراغية */
-  --gold-grad: linear-gradient(135deg, #f3dda0 0%, #e8c468 45%, #c9a24a 100%);
-  --shadow-deep: 0 20px 40px -15px rgba(0,0,0,0.6);
-}
-
-/* --- هيدر زجاجي داكن دائم (Glassmorphism) --- */
-.navbar {
-  background: #141E36; /* كحلي الهوية الرسمي — معتم، لا يتأثر بما خلفه */
-  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(232,196,104,0.2);
-  transition: background var(--dur-luxe) var(--ease-luxe), padding var(--dur-luxe) var(--ease-luxe), box-shadow var(--dur-luxe) var(--ease-luxe);
-}
-.navbar.scrolled {
-  background: #141E36;
-  box-shadow: 0 12px 40px -12px rgba(0,0,0,0.55);
-}
-
-/* --- توحيد نعومة كل التفاعلات --- */
-.nav-links a, .btn-primary, .btn-secondary,
-.service-card, .trainer-card, .accreditation-card,
-.footer-socials a, .whatsapp-float, .hero-image-wrapper {
-  transition-timing-function: var(--ease-luxe);
-  transition-duration: var(--dur-luxe);
-}
-
-/* --- أزرار ذهب الشمبانيا مع لمعان معدني عابر --- */
-.btn-primary {
-  background: var(--gold-grad);
-  border: none; position: relative; overflow: hidden; isolation: isolate;
-  box-shadow: 0 10px 26px -12px rgba(201,162,74,0.55);
-}
-.btn-primary::after {
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.5) 50%, transparent 68%);
-  transform: translateX(-130%);
-  transition: transform 0.9s var(--ease-luxe);
-}
-.btn-primary:hover {
-  background: var(--gold-grad); color: var(--navy);
-  transform: translateY(-3px);
-  box-shadow: 0 20px 44px -14px rgba(232,196,104,0.5);
-}
-.btn-primary:hover::after { transform: translateX(130%); }
-.btn-secondary:hover {
-  border-color: var(--gold-light); color: var(--gold-light);
-  box-shadow: 0 14px 34px -16px rgba(232,196,104,0.35);
-}
-
-/* --- كروت بعمق ثلاثي الأبعاد + إضاءة محيطية تتبع المؤشر --- */
-.service-card, .trainer-card, .accreditation-card {
-  position: relative; transform: translateZ(0); will-change: transform;
-}
-.service-card::after, .trainer-card::after, .accreditation-card::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit;
-  background: radial-gradient(340px circle at var(--mx,50%) var(--my,50%), rgba(232,196,104,0.18), transparent 65%);
-  opacity: 0; transition: opacity var(--dur-luxe) var(--ease-luxe);
-  pointer-events: none;
-}
-.service-card:hover::after, .trainer-card:hover::after, .accreditation-card:hover::after { opacity: 1; }
-.service-card:hover, .trainer-card:hover, .accreditation-card:hover {
-  box-shadow: 0 30px 60px -12px rgba(6,10,18,0.45), 0 0 0 1px rgba(232,196,104,0.15);
-}
-
-/* --- أضواء محيطية ضبابية بطيئة تمنح عمقًا فراغيًا (تُحقن من script.js) --- */
-.ambient-orb {
-  position: fixed; border-radius: 50%;
-  filter: blur(100px); opacity: 0.16;
-  pointer-events: none; z-index: 0;
-  will-change: transform;
-  animation: orbDrift 38s var(--ease-luxe) infinite alternate;
-}
-.ambient-orb.o1 { width: 420px; height: 420px; background: #e8c468; top: -120px; left: -120px; }
-.ambient-orb.o2 { width: 360px; height: 360px; background: #2a3f6e; bottom: -100px; right: -100px; animation-duration: 46s; animation-delay: -12s; }
-.ambient-orb.o3 { width: 280px; height: 280px; background: #a17827; top: 45%; left: 60%; opacity: 0.1; animation-duration: 52s; animation-delay: -25s; }
-@keyframes orbDrift {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(60px,-40px,0) scale(1.12); }
-  100% { transform: translate3d(-40px,50px,0) scale(0.95); }
-}
-main, footer, section { position: relative; z-index: 1; }
-/* الهيدر يجب أن يعلو الأقسام حتى تظهر قائمة الجوال فوق محتوى الصفحة */
-.navbar { position: relative; z-index: 1000; }
-
-/* --- تسريع عتادي للعناصر المتحركة باستمرار --- */
-.hero-watermark, .marquee-content, #heroParticles { transform: translateZ(0); }
-
-
-
-
-/* ============================================================
-   V5 — مركز ثلاثي الأبعاد + عمق طباعي + مؤشر ذهبي (Awwwards layer)
-   ============================================================ */
-
-/* --- النص المائي العملاق خلف المجسّم (عمق فراغي) --- */
-.hero-word {
-  position: absolute; z-index: 0; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-en); font-weight: 800;
-  font-size: clamp(5rem, 18vw, 17rem); line-height: 1;
-  letter-spacing: 0.02em; white-space: nowrap;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(232,196,104,0.10);
-  background: linear-gradient(180deg, rgba(232,196,104,0.06), rgba(232,196,104,0.01));
-  -webkit-background-clip: text; background-clip: text;
-  pointer-events: none; user-select: none;
-}
-
-@media (max-width: 1024px), (hover: none) {
-  .hero-word { font-size: clamp(4rem, 26vw, 8rem); opacity: 0.7; }
-  .hero::after { width: 380px; height: 380px; }
-}
-
-/* --- مؤشر ذهبي مخصّص (حلقة تتبع تكبر عند التفاعل) --- */
-.cursor-ring {
-  position: fixed; top: 0; left: 0; z-index: 9998;
-  width: 34px; height: 34px; border-radius: 50%;
-  border: 1.5px solid rgba(232,196,104,0.55);
-  background: radial-gradient(circle, rgba(232,196,104,0.10) 0%, transparent 70%);
-  transform: translate(-50%, -50%) scale(1);
-  transition: width 0.4s var(--ease-luxe), height 0.4s var(--ease-luxe),
-              background 0.4s var(--ease-luxe), border-color 0.4s var(--ease-luxe),
-              opacity 0.4s var(--ease-luxe);
-  pointer-events: none; opacity: 0; will-change: transform;
-  mix-blend-mode: screen;
-}
-.cursor-ring.visible { opacity: 1; }
-.cursor-ring.grow {
-  width: 60px; height: 60px;
-  background: radial-gradient(circle, rgba(232,196,104,0.20) 0%, transparent 70%);
-  border-color: rgba(232,196,104,0.8);
-}
-/* يُعطّل المؤشر المخصّص كليًا على اللمس */
-@media (hover: none), (pointer: coarse) { .cursor-ring { display: none; } }
-
-
-
-/* --- شبكات الكروت: عمودان على التابلت (769–1024px) --- */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .services-grid, .trainers-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* ============================================================
-   قسم اللقاءات والتغطيات الإعلامية — Media Coverage
-   كحلي #141E36 خلفية · ذهبي #E8C468 لمسات · عاجي #F8F6EF نصوص
-   ============================================================ */
-.media-section {
-  background: var(--brand-navy, #141E36);
-  position: relative; overflow: hidden;
-}
-.media-section .section-tag { color: var(--brand-gold-light, #E8C468); }
-.media-section .section-title { color: var(--brand-ivory, #F8F6EF); }
-.media-section .section-desc { color: rgba(248,246,239,0.62); }
-.media-section .section-line { background: var(--brand-gold-light, #E8C468); }
-
-.media-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
-}
-
-.media-card {
-  background: rgba(248,246,239,0.04);
-  border: 1px solid rgba(232,196,104,0.18);
-  border-radius: 16px; overflow: hidden;
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  transform: translateZ(0); will-change: transform;
-  transition: transform var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
-              box-shadow var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
-              border-color var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
-}
-.media-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(232,196,104,0.45);
-  box-shadow: 0 30px 60px -12px rgba(0,0,0,0.6);
-}
-
-/* الصورة المصغّرة + الطبقة الزجاجية */
-.media-thumb {
-  position: relative; aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #1c2a4a 0%, #141E36 100%);
-  background-size: cover; background-position: center;
-}
-.media-overlay {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(180deg, rgba(20,30,54,0.25) 0%, rgba(20,30,54,0.75) 100%);
-  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
-  transition: background var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
-              backdrop-filter var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
-}
-.media-card:hover .media-overlay {
-  background: linear-gradient(180deg, rgba(20,30,54,0.15) 0%, rgba(20,30,54,0.6) 100%);
-  -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0);
-}
-
-/* زر التشغيل الذهبي */
-.media-play {
-  width: 58px; height: 58px; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #f3dda0 0%, #E8C468 45%, #C5A059 100%);
-  color: var(--brand-navy, #141E36);
-  border: none; cursor: pointer; padding-right: 3px;
-  box-shadow: 0 10px 26px -8px rgba(232,196,104,0.55);
-  transition: transform var(--dur-luxe, 0.8s) var(--ease-luxe, ease),
-              box-shadow var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
-}
-.media-play:hover { transform: scale(1.1); box-shadow: 0 16px 38px -10px rgba(232,196,104,0.7); }
-.media-play--idle { opacity: 0.35; cursor: default; }
-
-/* شارة القناة */
-.media-badge {
-  position: absolute; top: 12px; right: 12px; z-index: 2;
-  background: rgba(20,30,54,0.85);
-  border: 1px solid rgba(232,196,104,0.4);
-  color: var(--brand-gold-light, #E8C468);
-  font-family: var(--font-ar-head, 'Cairo', sans-serif);
-  font-size: 0.75rem; font-weight: 700;
-  padding: 0.32rem 0.85rem; border-radius: 50px;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-}
-
-.media-body { padding: 1.4rem 1.5rem 1.6rem; }
-.media-title {
-  font-family: var(--font-ar-head, 'Cairo', sans-serif);
-  font-size: 1.12rem; font-weight: 700;
-  color: var(--brand-ivory, #F8F6EF); margin-bottom: 0.6rem;
-}
-.media-desc {
-  font-size: 0.92rem; line-height: 1.8;
-  color: rgba(248,246,239,0.6); margin-bottom: 1.1rem;
-}
-.media-link {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  background: none; border: none; padding: 0; cursor: pointer;
-  font-family: var(--font-ar-head, 'Cairo', sans-serif);
-  font-size: 0.9rem; font-weight: 700;
-  color: var(--brand-gold-light, #E8C468); text-decoration: none;
-  transition: gap var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
-}
-.media-link:hover { gap: 0.85rem; }
-.media-card--empty .media-title,
-.media-card--empty .media-desc { opacity: 0.55; }
-
-/* نافذة تشغيل الفيديو */
-.media-modal {
-  position: fixed; inset: 0; z-index: 9999;
-  display: none; align-items: center; justify-content: center;
-  background: rgba(6,10,18,0.88);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  padding: 1.5rem;
-}
-.media-modal.open { display: flex; }
-.media-modal-inner { position: relative; width: min(960px, 100%); }
-.media-modal-frame {
-  position: relative; aspect-ratio: 16 / 9;
-  border-radius: 16px; overflow: hidden;
-  border: 1px solid rgba(232,196,104,0.35);
-  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
-}
-.media-modal-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
-.media-modal-close {
-  position: absolute; top: -46px; left: 0;
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(248,246,239,0.1);
-  border: 1px solid rgba(232,196,104,0.35);
-  color: var(--brand-gold-light, #E8C468);
-  font-size: 1.5rem; line-height: 1; cursor: pointer;
-  transition: background var(--dur-luxe, 0.8s) var(--ease-luxe, ease);
-}
-.media-modal-close:hover { background: rgba(232,196,104,0.2); }
-
-/* ============================================================
-   قسم الموقع — خريطة جوجل + رمز QR
-   ============================================================ */
-.location-section { background: var(--brand-ivory, #F8F6EF); }
-.location-grid {
-  display: grid; grid-template-columns: 1.75fr 1fr; gap: 2.5rem; align-items: start;
-}
-
-.location-map-frame {
-  position: relative; height: 420px;
-  border-radius: 16px; overflow: hidden;
-  border: 1px solid rgba(20,30,54,0.1);
-  box-shadow: 0 25px 50px -12px rgba(20,30,54,0.22);
-}
-.location-map-frame iframe { width: 100%; height: 100%; border: 0; display: block; filter: saturate(1.05); }
-.location-cta { margin-top: 1.5rem; }
-
-/* بطاقة QR بإطار ذهبي معدني */
-.location-qr {
-  background: var(--white, #fff);
-  border-radius: 16px; padding: 2rem 1.6rem; text-align: center;
-  border: 1px solid rgba(232,196,104,0.35);
-  box-shadow: 0 25px 50px -12px rgba(20,30,54,0.16);
-}
-.qr-frame {
-  display: inline-block; padding: 12px; border-radius: 14px;
-  background: linear-gradient(135deg, #f3dda0 0%, #E8C468 45%, #A17827 100%);
-  box-shadow: 0 12px 30px -10px rgba(161,120,39,0.5);
-}
-.qr-frame img { display: block; width: 100%; max-width: 200px; height: auto; border-radius: 8px; background: var(--brand-ivory, #F8F6EF); }
-.qr-title {
-  font-family: var(--font-ar-head, 'Cairo', sans-serif);
-  font-size: 1.15rem; color: var(--brand-navy, #141E36); margin: 1.3rem 0 0.5rem;
-}
-.qr-note { font-size: 0.9rem; line-height: 1.8; color: var(--text-muted, #6b7280); }
-.qr-address {
-  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  margin-top: 1.2rem; padding-top: 1.2rem;
-  border-top: 1px solid rgba(20,30,54,0.08);
-  font-size: 0.86rem; font-weight: 500; color: var(--brand-navy, #141E36);
-}
-.qr-address svg { color: var(--gold, #A17827); flex-shrink: 0; }
-
-/* ===== استجابة القسمين ===== */
-@media (max-width: 1024px) {
-  .media-grid { grid-template-columns: repeat(2, 1fr); }
-  .location-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .location-map-frame { height: 360px; }
-}
-@media (max-width: 768px) {
-  .media-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .location-map-frame { height: 300px; }
-  .location-cta { width: 100%; justify-content: center; }
-  .media-modal-close { top: auto; bottom: -50px; left: 50%; transform: translateX(-50%); }
+        <!-- بطاقة رمز QR -->
+        <aside class="location-qr reveal">
+          <div class="qr-frame">
+            <img src="${LOCATION.qrUrl}" alt="رمز QR لموقع المعهد على خرائط جوجل" width="240" height="240" loading="lazy" />
+          </div>
+          <h3 class="qr-title">الوصول السريع</h3>
+          <p class="qr-note">امسح الكود للوصول السريع إلى مقر المعهد عبر هاتفك</p>
+          <div class="qr-address">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>${SITE.contact.address}</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>`;
 }
