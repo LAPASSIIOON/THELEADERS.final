@@ -755,16 +755,7 @@ main, .navbar, footer, section { position: relative; z-index: 1; }
   pointer-events: none; user-select: none;
 }
 
-/* --- كانفس المجسّم ثلاثي الأبعاد (جوهرة القيادة) --- */
-#heroGem {
-  position: absolute; z-index: 1; pointer-events: none;
-  top: 0.75rem; left: 50%; transform: translateX(-50%); /* تاج في الفراغ بين العمودين */
-  width: 235px; height: 255px;
-  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.45));
-  will-change: transform;
-}
 @media (max-width: 1024px), (hover: none) {
-  #heroGem { display: none; }              /* بديل خفيف على الجوال/اللمس */
   .hero-word { font-size: clamp(4rem, 26vw, 8rem); opacity: 0.7; }
   .hero::after { width: 380px; height: 380px; }
 }
